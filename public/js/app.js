@@ -377,6 +377,9 @@ window.viewClaim = id => App.viewClaim(id);
 // ── Init ───────────────────────────────────────────────────────────────────
 
 document.addEventListener('DOMContentLoaded', async () => {
+  // Wait for auth check to complete before making any API calls
+  const authenticated = await Auth.ready;
+  if (!authenticated) return;
   try {
     const stats = await API.getStats();
     App.updateQueueBadge(stats.pendingReview);

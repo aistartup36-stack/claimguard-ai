@@ -8,6 +8,10 @@ window.Auth = (() => {
   const loginBtn    = document.getElementById('login-btn');
   const loginInput  = document.getElementById('login-password');
 
+  // Promise that resolves to true/false once initial auth check completes
+  let _resolveReady;
+  const ready = new Promise(r => { _resolveReady = r; });
+
   function showApp() {
     loginScreen.style.display = 'none';
     appLayout.style.display = '';
@@ -24,12 +28,14 @@ window.Auth = (() => {
       const data = await res.json();
       if (data.success && data.data.authenticated) {
         showApp();
+        _resolveReady(true);
       } else {
         showLogin();
+        _resolveReady(false);
       }
     } catch {
-      // If server is unreachable, show login
       showLogin();
+      _resolveReady(false);
     }
   }
 
@@ -55,6 +61,8 @@ window.Auth = (() => {
           loginScreen.style.opacity = '';
           loginScreen.style.transition = '';
           loginInput.value = '';
+          // Load dashboard fresh now that the session cookie is set
+          if (window.App) App.navigate('dashboard');
         }, 300);
       } else {
         loginError.textContent = 'Incorrect password. Please try again.';
@@ -75,5 +83,5 @@ window.Auth = (() => {
   // Run auth check on page load
   checkAuth();
 
-  return { checkAuth, showLogin };
+  return { ready, checkAuth, showLogin };
 })();
