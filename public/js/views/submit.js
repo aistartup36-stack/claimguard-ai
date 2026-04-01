@@ -58,9 +58,21 @@ window.SubmitView = {
                   <div class="form-group"><label class="form-label">Date of Incident <span class="req">*</span></label><input class="form-input" type="date" name="incidentDate" required></div>
                   <div class="form-group"><label class="form-label">Date Reported <span class="req">*</span></label><input class="form-input" type="date" name="reportDate" required></div>
                 </div>
-                <div class="form-group"><label class="form-label">Incident Location <span class="req">*</span></label><input class="form-input" name="incidentLocation" required placeholder="Full address or location description"></div>
+                <div class="form-group">
+                  <label class="form-label">Postcode Lookup</label>
+                  <div class="postcode-lookup">
+                    <input class="form-input postcode-input" id="postcode-input" placeholder="e.g. SW1A 1AA" maxlength="10" autocomplete="postal-code">
+                    <button type="button" class="btn btn-primary postcode-btn" id="postcode-btn" onclick="SubmitView.lookupPostcode()">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                      Find Address
+                    </button>
+                  </div>
+                  <div id="postcode-results" style="display:none"></div>
+                  <div id="postcode-error" style="display:none" class="postcode-error"></div>
+                </div>
+                <div class="form-group"><label class="form-label">Incident Location <span class="req">*</span></label><input class="form-input" name="incidentLocation" id="incident-location" required placeholder="Full address or location description"></div>
                 <div class="form-grid-2">
-                  <div class="form-group"><label class="form-label">Claimed Amount ($) <span class="req">*</span></label><input class="form-input" type="number" name="claimedAmount" required min="1" step="0.01" placeholder="0.00"></div>
+                  <div class="form-group"><label class="form-label">Claimed Amount (\u00A3) <span class="req">*</span></label><input class="form-input" type="number" name="claimedAmount" required min="1" step="0.01" placeholder="0.00"></div>
                   <div class="form-group"><label class="form-label">Police Report Number</label><input class="form-input" name="policeReport" placeholder="e.g. RPT-2026-12345 or N/A"></div>
                 </div>
               </div>
@@ -111,6 +123,10 @@ window.SubmitView = {
 
     // Set today as report date
     document.querySelector('[name="reportDate"]').value = new Date().toISOString().split('T')[0];
+    // Allow Enter key in postcode field to trigger lookup
+    document.getElementById('postcode-input').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') { e.preventDefault(); SubmitView.lookupPostcode(); }
+    });
   },
 
   selectType(type) {
@@ -145,6 +161,80 @@ window.SubmitView = {
         ${f.type === 'application/pdf' ? '📄' : '🖼'} ${f.name}
         <button onclick="SubmitView._removeFile('${f.name}')" title="Remove">✕</button>
       </span>`).join('');
+  },
+
+  async lookupPostcode() {
+    const input = document.getElementById('postcode-input');
+    const resultsEl = document.getElementById('postcode-results');
+    const errorEl = document.getElementById('postcode-error');
+    const postcode = input.value.trim();
+
+    errorEl.style.display = 'none';
+    resultsEl.style.display = 'none';
+
+    if (!postcode) { errorEl.textContent = 'Please enter a postcode'; errorEl.style.display = 'block'; return; }
+
+    const btn = document.getElementById('postcode-btn');
+    btn.disabled = true;
+    btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/></svg> Searching\u2026';
+
+    try {
+      const res = await fetch(`https://api.postcodes.io/postcodes/${encodeURIComponent(postcode)}`);
+      const data = await res.json();
+
+      if (data.status !== 200 || !data.result) {
+        errorEl.textContent = 'Postcode not found, please enter address manually';
+        errorEl.style.display = 'block';
+        return;
+      }
+
+      const r = data.result;
+      const addresses = [];
+      const ward = r.admin_ward || '';
+      const district = r.admin_district || '';
+      const county = r.admin_county || '';
+      const region = r.region || '';
+      const pc = r.postcode || postcode;
+
+      // Build a few realistic address variants from the postcode data
+      const area = [ward, district].filter(Boolean).join(', ');
+      const full = [district, county || region].filter(Boolean).join(', ');
+
+      addresses.push({ label: `${area}, ${pc}`, value: `${area}, ${pc}` });
+      if (county && county !== district) {
+        addresses.push({ label: `${ward}, ${full}, ${pc}`, value: `${ward}, ${full}, ${pc}` });
+      }
+      addresses.push({ label: `${r.parish || ward}, ${district}, ${pc}`, value: `${r.parish || ward}, ${district}, ${pc}` });
+
+      // Deduplicate
+      const seen = new Set();
+      const unique = addresses.filter(a => { if (seen.has(a.value)) return false; seen.add(a.value); return true; });
+
+      resultsEl.innerHTML = `<div class="postcode-dropdown">
+        <div class="postcode-dropdown-header">${unique.length} result${unique.length !== 1 ? 's' : ''} for <strong>${pc}</strong></div>
+        ${unique.map(a => `<div class="postcode-option" onclick="SubmitView.selectAddress('${a.value.replace(/'/g, "\\'")}')">${a.label}</div>`).join('')}
+        <div class="postcode-option postcode-option-manual" onclick="SubmitView.dismissPostcode()">Enter address manually</div>
+      </div>`;
+      resultsEl.style.display = 'block';
+    } catch {
+      errorEl.textContent = 'Could not reach postcode service, please enter address manually';
+      errorEl.style.display = 'block';
+    } finally {
+      btn.disabled = false;
+      btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg> Find Address';
+    }
+  },
+
+  selectAddress(address) {
+    const locationInput = document.getElementById('incident-location');
+    if (locationInput) locationInput.value = address;
+    document.getElementById('postcode-results').style.display = 'none';
+  },
+
+  dismissPostcode() {
+    document.getElementById('postcode-results').style.display = 'none';
+    const locationInput = document.getElementById('incident-location');
+    if (locationInput) locationInput.focus();
   },
 
   async submit(e) {

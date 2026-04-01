@@ -91,6 +91,23 @@
 .file-tag button:hover { color: var(--danger); }
 .file-tags-container { margin-top: 12px; }
 
+/* ── Postcode Lookup ─────────────────────────────────────────────────────── */
+.postcode-lookup { display: flex; gap: 10px; }
+.postcode-input { flex: 1; text-transform: uppercase; }
+.postcode-btn { white-space: nowrap; flex-shrink: 0; }
+.postcode-error { font-size: 13px; color: var(--danger); margin-top: 6px; }
+.postcode-dropdown { border: 1px solid var(--gray-200); border-radius: var(--radius); background: var(--white); margin-top: 8px; box-shadow: var(--shadow-md); overflow: hidden; }
+.postcode-dropdown-header { padding: 10px 14px; font-size: 12px; color: var(--gray-500); background: var(--gray-50); border-bottom: 1px solid var(--gray-200); }
+.postcode-option { padding: 11px 14px; font-size: 14px; color: var(--gray-700); cursor: pointer; border-bottom: 1px solid var(--gray-100); transition: background .1s; }
+.postcode-option:last-child { border-bottom: none; }
+.postcode-option:hover { background: var(--blue-100); color: var(--navy-900); }
+.postcode-option-manual { color: var(--gray-500); font-size: 13px; font-style: italic; }
+.postcode-option-manual:hover { color: var(--gray-700); background: var(--gray-50); }
+@media (max-width: 480px) {
+  .postcode-lookup { flex-direction: column; }
+  .postcode-btn { width: 100%; justify-content: center; }
+}
+
 /* ── Fraud Score Gauge ───────────────────────────────────────────────────── */
 .gauge-container { text-align: center; padding: 8px 0; }
 
