@@ -48,7 +48,7 @@ CLAIM DETAILS:
 • Policy: ${claimData.policyNumber}
 • Incident Date: ${claimData.incidentDate}
 • Report Date: ${claimData.reportDate} (${delay} day${delay !== 1 ? 's' : ''} later)
-• Claimed Amount: $${Number(claimData.claimedAmount).toLocaleString()}
+• Claimed Amount: \u00A3${Number(claimData.claimedAmount).toLocaleString('en-GB')}
 • Location: ${claimData.incidentLocation}
 • Previous Claims: ${claimData.previousClaims || 'None declared'}
 • Police Report: ${claimData.policeReport || 'None filed'}
@@ -90,13 +90,20 @@ Scoring guide:
 
 confidence per indicator: 0 = uncertain, 100 = highly confident this is a genuine fraud signal.` });
 
-  const resp = await client().messages.create({
-    model: 'claude-opus-4-6',
-    max_tokens: 2048,
-    messages: [{ role: 'user', content }]
-  });
+  let resp;
+  try {
+    resp = await client().messages.create({
+      model: 'claude-sonnet-4-6',
+      max_tokens: 2048,
+      messages: [{ role: 'user', content }]
+    });
+  } catch (apiErr) {
+    const msg = apiErr?.error?.message || apiErr?.message || 'Unknown API error';
+    throw new Error(`Claude API error: ${msg}`);
+  }
 
-  const text = resp.content[0].text.trim();
+  const text = (resp.content?.[0]?.text || '').trim();
+  if (!text) throw new Error('Claude API returned empty response');
   try {
     return JSON.parse(text);
   } catch {
