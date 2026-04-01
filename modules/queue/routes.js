@@ -8,7 +8,7 @@ const router = express.Router();
 const claimsStore = require('../../store/claims');
 
 router.get('/queue', (req, res) => {
-  const queue = claimsStore.getAll()
+  const queue = claimsStore.getForUser(req.user.username, req.user.role)
     .filter(c => c.status === 'pending-review' || c.status === 'info-requested')
     .sort((a, b) => (b.fraudScore || 0) - (a.fraudScore || 0));
   res.json({ success: true, data: queue });
@@ -17,6 +17,9 @@ router.get('/queue', (req, res) => {
 router.put('/claims/:id/review', (req, res) => {
   const claim = claimsStore.getById(req.params.id);
   if (!claim) return res.status(404).json({ success: false, error: 'Claim not found' });
+  if (req.user.role !== 'admin' && claim.owner !== req.user.username) {
+    return res.status(403).json({ success: false, error: 'Access denied' });
+  }
 
   const { action, reviewerName, notes } = req.body;
   if (!['approve', 'reject', 'request-info'].includes(action)) {
@@ -45,6 +48,9 @@ router.put('/claims/:id/review', (req, res) => {
 router.put('/claims/:id/assign', (req, res) => {
   const claim = claimsStore.getById(req.params.id);
   if (!claim) return res.status(404).json({ success: false, error: 'Claim not found' });
+  if (req.user.role !== 'admin' && claim.owner !== req.user.username) {
+    return res.status(403).json({ success: false, error: 'Access denied' });
+  }
 
   const { assignedTo } = req.body;
   const auditEntry = {

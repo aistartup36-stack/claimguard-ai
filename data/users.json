@@ -1,0 +1,20 @@
+[
+  {
+    "username": "admin",
+    "passwordHash": "f1e1d98bfa08038e0f77dcd8cf4a611a8d3b238310ed6c32013de81decc7312d",
+    "role": "admin",
+    "displayName": "Admin"
+  },
+  {
+    "username": "demo1",
+    "passwordHash": "43c27b4e263fa191a6a7ec198cd4d5b47d17413c49d77dc533a01720707e3202",
+    "role": "user",
+    "displayName": "Demo User 1"
+  },
+  {
+    "username": "demo2",
+    "passwordHash": "43c27b4e263fa191a6a7ec198cd4d5b47d17413c49d77dc533a01720707e3202",
+    "role": "user",
+    "displayName": "Demo User 2"
+  }
+]

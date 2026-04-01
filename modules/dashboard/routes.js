@@ -8,7 +8,7 @@ const router = express.Router();
 const claimsStore = require('../../store/claims');
 
 router.get('/stats', (req, res) => {
-  const claims = claimsStore.getAll();
+  const claims = claimsStore.getForUser(req.user.username, req.user.role);
   const total = claims.length;
   const fraudDetected = claims.filter(c => c.status === 'rejected').length;
   const moneySaved = claims.filter(c => c.status === 'rejected').reduce((s, c) => s + c.claimedAmount, 0);
@@ -21,7 +21,7 @@ router.get('/stats', (req, res) => {
 });
 
 router.get('/activity', (req, res) => {
-  const claims = claimsStore.getAll();
+  const claims = claimsStore.getForUser(req.user.username, req.user.role);
   // Flatten all audit trail entries, attach claim context, sort by timestamp desc
   const events = [];
   for (const claim of claims) {

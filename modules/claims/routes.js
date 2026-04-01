@@ -24,7 +24,8 @@ const upload = multer({
 
 // GET all claims (summary view — no analysis body)
 router.get('/claims', (req, res) => {
-  const claims = claimsStore.getAll().map(({ analysis, ...rest }) => rest);
+  const claims = claimsStore.getForUser(req.user.username, req.user.role)
+    .map(({ analysis, ...rest }) => rest);
   res.json({ success: true, data: claims });
 });
 
@@ -32,6 +33,9 @@ router.get('/claims', (req, res) => {
 router.get('/claims/:id', (req, res) => {
   const claim = claimsStore.getById(req.params.id);
   if (!claim) return res.status(404).json({ success: false, error: 'Claim not found' });
+  if (req.user.role !== 'admin' && claim.owner !== req.user.username) {
+    return res.status(403).json({ success: false, error: 'Access denied' });
+  }
   res.json({ success: true, data: claim });
 });
 
@@ -58,6 +62,7 @@ router.post('/claims', upload.array('documents', 5), async (req, res) => {
       ...claimData,
       claimedAmount: Number(claimData.claimedAmount),
       files,
+      owner: req.user.username,
       assignedTo: null,
       status: 'analyzing',
       riskLevel: null,

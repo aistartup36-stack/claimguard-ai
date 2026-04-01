@@ -13,6 +13,7 @@ router.get('/settings', (req, res) => {
 });
 
 router.put('/settings', (req, res) => {
+  if (req.user.role !== 'admin') return res.status(403).json({ success: false, error: 'Admin access required' });
   const { lowRiskThreshold, highRiskThreshold, escalationEnabled, sensitivity } = req.body;
   const updates = {};
 
@@ -36,6 +37,7 @@ router.put('/settings', (req, res) => {
 });
 
 router.post('/settings/reviewers', (req, res) => {
+  if (req.user.role !== 'admin') return res.status(403).json({ success: false, error: 'Admin access required' });
   const { email, name } = req.body;
   if (!email || !email.includes('@')) return res.status(400).json({ success: false, error: 'Valid email required' });
 
@@ -47,6 +49,7 @@ router.post('/settings/reviewers', (req, res) => {
 });
 
 router.delete('/settings/reviewers/:email', (req, res) => {
+  if (req.user.role !== 'admin') return res.status(403).json({ success: false, error: 'Admin access required' });
   const email = decodeURIComponent(req.params.email);
   const settings = settingsStore.get();
   const updated = settingsStore.update({ reviewers: settings.reviewers.filter(r => r !== email) });

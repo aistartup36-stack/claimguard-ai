@@ -13,6 +13,7 @@ const claimsStore = require('../../store/claims');
 router.get('/reports/claims', (req, res) => {
   const { status, riskLevel, claimType, search, startDate, endDate, sort = 'submittedAt', order = 'desc' } = req.query;
   let claims = claimsStore.filter({ status, riskLevel, claimType, search, startDate, endDate });
+  if (req.user.role !== 'admin') claims = claims.filter(c => c.owner === req.user.username);
 
   // Sort
   claims.sort((a, b) => {
@@ -37,7 +38,8 @@ router.get('/reports/claims', (req, res) => {
 // Export as CSV
 router.get('/reports/export/csv', (req, res) => {
   const { status, riskLevel, claimType, search, startDate, endDate } = req.query;
-  const claims = claimsStore.filter({ status, riskLevel, claimType, search, startDate, endDate });
+  let claims = claimsStore.filter({ status, riskLevel, claimType, search, startDate, endDate });
+  if (req.user.role !== 'admin') claims = claims.filter(c => c.owner === req.user.username);
 
   const headers = ['Claim ID', 'Claimant Name', 'Claim Type', 'Policy Number', 'Claimed Amount', 'Incident Date', 'Report Date', 'Risk Level', 'Fraud Score', 'Status', 'Submitted At', 'Reviewed By', 'Indicators'];
   const rows = claims.map(c => [
@@ -66,7 +68,8 @@ router.get('/reports/export/csv', (req, res) => {
 // Export as printable HTML (browser prints to PDF)
 router.get('/reports/export/pdf', (req, res) => {
   const { status, riskLevel, claimType, search, startDate, endDate } = req.query;
-  const claims = claimsStore.filter({ status, riskLevel, claimType, search, startDate, endDate });
+  let claims = claimsStore.filter({ status, riskLevel, claimType, search, startDate, endDate });
+  if (req.user.role !== 'admin') claims = claims.filter(c => c.owner === req.user.username);
   const date = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
 
   const statusLabels = { approved: 'Approved', rejected: 'Rejected', 'pending-review': 'Pending Review', 'low-risk': 'Low Risk', 'info-requested': 'Info Requested', analyzing: 'Analysing' };
