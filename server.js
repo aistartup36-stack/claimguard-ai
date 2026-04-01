@@ -16,6 +16,11 @@ app.use(express.json({ limit: '10mb' }));
 // Serve frontend
 app.use(express.static(path.join(__dirname, 'public')));
 
+// ── Auth ──────────────────────────────────────────────────────────────────────
+const { router: authRouter, requireAuth } = require('./modules/auth/routes');
+app.use('/api', authRouter);
+app.use('/api', requireAuth);
+
 // ── Mount Modules ─────────────────────────────────────────────────────────────
 app.use('/api', require('./modules/dashboard/routes'));   // Module 1 — Dashboard
 app.use('/api', require('./modules/claims/routes'));      // Module 2 — Claim Submission
@@ -33,11 +38,13 @@ app.use((err, req, res, next) => {
 // ── Start ─────────────────────────────────────────────────────────────────────
 app.listen(PORT, () => {
   const hasKey = !!process.env.ANTHROPIC_API_KEY;
+  const hasAuth = !!process.env.ACCESS_PASSWORD;
   console.log('\n╔══════════════════════════════════════════════╗');
   console.log('║         ClaimGuard AI  v2.0  —  Running       ║');
   console.log('╚══════════════════════════════════════════════╝');
   console.log(`\n  URL:    http://localhost:${PORT}`);
   console.log(`  AI:     ${hasKey ? '✅ Claude Opus connected' : '⚠️  Demo mode (no ANTHROPIC_API_KEY)'}`);
+  console.log(`  Auth:   ${hasAuth ? '🔒 Password protection enabled' : '⚠️  No ACCESS_PASSWORD set (open access)'}`);
   console.log('\n  Modules: Dashboard · Claims · Analysis · Queue · Reports · Settings\n');
   if (!hasKey) console.log('  → Copy .env.example to .env and add ANTHROPIC_API_KEY\n');
 });

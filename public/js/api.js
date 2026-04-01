@@ -1,26 +1,33 @@
 /* ── ClaimGuard AI — API Client ───────────────────────────────────────────── */
 
 window.API = {
+  _handleUnauth(r) {
+    if (r.status === 401 && window.Auth) { window.Auth.showLogin(); throw new Error('Session expired'); }
+  },
   async _get(path) {
     const r = await fetch(path);
+    this._handleUnauth(r);
     const j = await r.json();
     if (!j.success) throw new Error(j.error || 'Request failed');
     return j.data;
   },
   async _post(path, body) {
     const r = await fetch(path, { method: 'POST', body });
+    this._handleUnauth(r);
     const j = await r.json();
     if (!j.success) throw new Error(j.error || 'Request failed');
     return j.data;
   },
   async _put(path, data) {
     const r = await fetch(path, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
+    this._handleUnauth(r);
     const j = await r.json();
     if (!j.success) throw new Error(j.error || 'Request failed');
     return j.data;
   },
   async _delete(path) {
     const r = await fetch(path, { method: 'DELETE' });
+    this._handleUnauth(r);
     const j = await r.json();
     if (!j.success) throw new Error(j.error || 'Request failed');
     return j.data;
