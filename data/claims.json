@@ -2,408 +2,853 @@
   {
     "id": "CLM-2026-0001",
     "claimType": "auto",
-    "claimantName": "Robert Harrison",
-    "policyNumber": "POL-2024-8821",
-    "incidentDate": "2026-03-10",
-    "reportDate": "2026-03-11",
-    "claimedAmount": 4200,
-    "incidentLocation": "I-95 Northbound, Miami, FL",
-    "incidentDescription": "Rear-ended at a traffic light by an unknown vehicle. The driver fled the scene before I could get their details.",
-    "damageDescription": "Rear bumper cracked and displaced, trunk lid bent, both tail lights shattered, spare tyre compartment damaged.",
-    "witnesses": "None — hit and run",
-    "policeReport": "RPT-2026-34521",
-    "previousClaims": "0",
+    "claimantName": "James Morrison",
+    "policyNumber": "POL-2024-4471",
+    "incidentDate": "2026-03-08",
+    "reportDate": "2026-03-10",
+    "claimedAmount": 45000,
+    "incidentLocation": "Tesco car park, Gallions Reach, London E6",
+    "incidentDescription": "Vehicle stolen overnight from a supermarket car park. I left the car at approximately 10pm and returned at 7am to find it gone. No CCTV available according to store staff. This is a 2025 BMW M4 Competition.",
+    "damageDescription": "Total loss — vehicle not recovered. Claimed value includes vehicle (£42,000) plus personal belongings inside the car (£3,000 in golf clubs and designer sunglasses).",
+    "witnesses": "None",
+    "policeReport": "N/A — did not file",
+    "previousClaims": "2 (2025 theft claim £22,000; 2024 collision claim £18,500)",
     "files": [],
     "assignedTo": "sarah.mitchell@claimlens.com",
     "owner": "demo1",
-    "status": "approved",
-    "riskLevel": "low",
-    "fraudScore": 18,
+    "status": "pending-review",
+    "riskLevel": "high",
+    "fraudScore": 88,
     "analysis": {
-      "indicators": [],
-      "summary": "This claim presents with all the hallmarks of a legitimate incident. The police report was filed promptly within 24 hours, and the damage description is entirely consistent with the mechanism described. The claimant has no prior claims history, and the claimed amount is reasonable and proportionate.\n\nThe hit-and-run nature of the incident, while unfortunate, is a common occurrence and does not raise suspicion of itself.",
-      "key_concerns": [],
-      "positive_factors": [
-        "Police report filed within 24 hours",
-        "Damage consistent with described impact",
-        "No previous claims history",
-        "Claimed amount proportionate"
+      "indicators": [
+        {
+          "category": "Missing Documentation",
+          "description": "No police report filed for a £45,000 vehicle theft — highly irregular and required by policy terms",
+          "severity": "high",
+          "confidence": 96
+        },
+        {
+          "category": "Pattern Match",
+          "description": "Third major claim in three years with escalating values (£18.5k → £22k → £45k), totalling £85,500",
+          "severity": "high",
+          "confidence": 93
+        },
+        {
+          "category": "Suspicious Description",
+          "description": "Left vehicle overnight in a car park with no explanation for why — unusual behaviour for a high-value vehicle",
+          "severity": "medium",
+          "confidence": 74
+        },
+        {
+          "category": "Missing Documentation",
+          "description": "Personal contents claim of £3,000 lacks receipts or proof of ownership",
+          "severity": "medium",
+          "confidence": 68
+        }
       ],
-      "recommendation": "Approve claim. All documentation in order. Process for standard payment.",
-      "estimated_legitimate_value": 4200
+      "summary": "This claim presents multiple high-confidence fraud indicators. The absence of a police report for a £45,000 vehicle theft is the most critical red flag — legitimate theft victims almost universally contact police immediately, and most policies require it as a condition of cover.\n\nThe escalating pattern of three claims in three years totalling £85,500 is strongly consistent with serial insurance fraud. The circumstances described — leaving a premium vehicle in a supermarket car park overnight — are implausible and suggest either staged theft or pre-arranged disposal.\n\nThe additional contents claim of £3,000 without documentation is a common tactic to inflate the overall payout.",
+      "key_concerns": [
+        "No police report for £45k theft",
+        "Third escalating claim in 3 years",
+        "Implausible circumstances",
+        "Unverified contents claim"
+      ],
+      "positive_factors": [
+        "Claimant provided specific location details"
+      ],
+      "recommendation": "Decline pending police report. Refer to Special Investigations Unit. Cross-reference prior claims for patterns. Request telematics data if available.",
+      "estimated_legitimate_value": null
     },
-    "submittedAt": "2026-03-11T10:30:00Z",
+    "submittedAt": "2026-03-10T09:15:00Z",
     "auditTrail": [
       {
-        "timestamp": "2026-03-11T10:30:00Z",
+        "timestamp": "2026-03-10T09:15:00Z",
         "actor": "System",
         "action": "submitted",
-        "notes": ""
+        "notes": "0 document(s) attached"
       },
       {
-        "timestamp": "2026-03-12T09:15:00Z",
-        "actor": "Sarah Mitchell",
-        "action": "approved",
-        "notes": "All documentation in order. Police report verified."
+        "timestamp": "2026-03-10T09:15:01Z",
+        "actor": "System",
+        "action": "escalated",
+        "notes": "High risk (score 88) — auto-escalated to review queue"
       }
     ]
   },
   {
     "id": "CLM-2026-0002",
     "claimType": "property",
-    "claimantName": "Patricia Nguyen",
-    "policyNumber": "POL-2023-1144",
-    "incidentDate": "2026-03-05",
-    "reportDate": "2026-03-06",
-    "claimedAmount": 28500,
-    "incidentLocation": "847 Maple Street, Austin, TX",
-    "incidentDescription": "A burst pipe in the upstairs bathroom caused flooding throughout the second floor and significant ceiling damage in the first-floor living room.",
-    "damageDescription": "Water damage to hardwood floors (approx 400 sq ft), ceiling plaster damage in living room, damaged drywall in bathroom, destroyed bathroom vanity.",
-    "witnesses": "Neighbour Jennifer Park assisted in water shutoff",
-    "policeReport": "N/A",
-    "previousClaims": "1 (2021 storm damage, $3,200)",
+    "claimantName": "Sarah Mitchell",
+    "policyNumber": "POL-2025-2289",
+    "incidentDate": "2026-03-14",
+    "reportDate": "2026-03-15",
+    "claimedAmount": 12500,
+    "incidentLocation": "14 Thornberry Close, Solihull, West Midlands B91 3QR",
+    "incidentDescription": "Fire broke out in the kitchen at approximately 2am. I was asleep upstairs and was woken by the smoke alarm. Fire brigade attended within 12 minutes. The fire was contained to the kitchen and hallway but smoke damage affected the entire ground floor.",
+    "damageDescription": "Complete destruction of kitchen units, worktops, and appliances. Smoke damage to hallway, living room, and dining room. Damaged flooring throughout ground floor. Replacement of all soft furnishings due to smoke contamination.",
+    "witnesses": "West Midlands Fire Service — Station Commander reported smell of accelerant at the scene",
+    "policeReport": "WMP-2026-MV-08841",
+    "previousClaims": "0",
     "files": [],
     "assignedTo": "david.chen@claimlens.com",
     "owner": "demo1",
-    "status": "approved",
-    "riskLevel": "low",
-    "fraudScore": 22,
+    "status": "pending-review",
+    "riskLevel": "high",
+    "fraudScore": 82,
     "analysis": {
       "indicators": [
         {
-          "category": "Missing Documentation",
-          "description": "No plumber assessment at time of submission",
+          "category": "Suspicious Description",
+          "description": "Fire Service Station Commander noted smell of accelerant at the scene — suggests deliberate ignition",
+          "severity": "high",
+          "confidence": 91
+        },
+        {
+          "category": "Inconsistent Timeline",
+          "description": "Fire started at 2am in the kitchen with no cooking or appliance use — no credible ignition source identified",
+          "severity": "high",
+          "confidence": 84
+        },
+        {
+          "category": "Suspicious Description",
+          "description": "Claimant was conveniently asleep upstairs with a working smoke alarm, ensuring personal safety during a potentially staged fire",
+          "severity": "medium",
+          "confidence": 62
+        },
+        {
+          "category": "Inflated Estimate",
+          "description": "Claiming replacement of all ground-floor soft furnishings due to smoke may exceed actual contamination",
           "severity": "low",
-          "confidence": 45
+          "confidence": 48
         }
       ],
-      "summary": "This claim presents as a legitimate water damage incident. The description is specific and credible, the witness corroborates the event, and the claimed amount is reasonable for the scope described. The single prior claim from 2021 is minor and unrelated.",
+      "summary": "The accelerant finding by the Fire Service is the dominant concern in this claim. When a trained Station Commander identifies an accelerant smell at the scene, this warrants serious investigation as it strongly suggests arson.\n\nThe 2am timing with no credible ignition source corroborates this concern. While the claimant has no prior claims history, which is a positive factor, arson-for-profit does not require a claims history and first-time offenders are common.\n\nThe police report reference suggests an active investigation which must be resolved before any settlement is considered.",
       "key_concerns": [
-        "No contractor assessment at submission"
+        "Accelerant detected by Fire Service",
+        "No credible ignition source at 2am",
+        "Active police investigation"
       ],
       "positive_factors": [
-        "Witness provided corroboration",
+        "No previous claims history",
         "Reported promptly",
-        "Prior claim is minor and unrelated"
+        "Fire Service and police attended"
       ],
-      "recommendation": "Approve with standard water damage assessment. Request contractor quotes as part of normal processing.",
-      "estimated_legitimate_value": 26000
+      "recommendation": "Place claim on hold pending outcome of police investigation (ref WMP-2026-MV-08841). Commission independent fire investigator report. Do not settle until arson is ruled out.",
+      "estimated_legitimate_value": 12500
     },
-    "submittedAt": "2026-03-06T14:22:00Z",
+    "submittedAt": "2026-03-15T11:30:00Z",
     "auditTrail": [
       {
-        "timestamp": "2026-03-06T14:22:00Z",
+        "timestamp": "2026-03-15T11:30:00Z",
         "actor": "System",
         "action": "submitted",
-        "notes": ""
+        "notes": "0 document(s) attached"
       },
       {
-        "timestamp": "2026-03-07T11:00:00Z",
-        "actor": "David Chen",
-        "action": "approved",
-        "notes": "Contractor assessment received post-submission. Legitimate claim."
+        "timestamp": "2026-03-15T11:30:01Z",
+        "actor": "System",
+        "action": "escalated",
+        "notes": "High risk (score 82) — auto-escalated to review queue"
       }
     ]
   },
   {
     "id": "CLM-2026-0003",
     "claimType": "auto",
-    "claimantName": "Marcus Williams",
-    "policyNumber": "POL-2025-3390",
-    "incidentDate": "2026-02-01",
+    "claimantName": "David Chen",
+    "policyNumber": "POL-2025-6617",
+    "incidentDate": "2026-03-18",
     "reportDate": "2026-03-18",
-    "claimedAmount": 18700,
-    "incidentLocation": "Unspecified parking lot, downtown Chicago, IL",
-    "incidentDescription": "Vehicle was vandalised while parked. Came back to find significant damage. Not sure exactly when it happened.",
-    "damageDescription": "Multiple dents across hood and roof, two windows smashed, interior damaged, stereo removed, catalytic converter missing.",
-    "witnesses": "None",
-    "policeReport": "N/A",
-    "previousClaims": "2 (2024 vandalism $8,200; 2023 theft $11,500)",
+    "claimedAmount": 3200,
+    "incidentLocation": "A38 Northbound, near Branston, Burton upon Trent, Staffordshire",
+    "incidentDescription": "Stationary in traffic on the A38 when I was rear-ended by a van. Impact was moderate. I have full dashcam footage of the incident showing the other vehicle failing to stop in time.",
+    "damageDescription": "Rear bumper cracked and displaced, boot lid slightly buckled, nearside tail light cracked, minor paint damage. Dashcam footage clearly shows point of impact.",
+    "witnesses": "Dashcam footage available, other driver exchanged details (Mr P. Collins)",
+    "policeReport": "N/A — details exchanged at scene",
+    "previousClaims": "0",
     "files": [],
     "assignedTo": null,
     "owner": "demo1",
-    "status": "pending-review",
-    "riskLevel": "medium",
-    "fraudScore": 58,
+    "status": "approved",
+    "riskLevel": "low",
+    "fraudScore": 8,
     "analysis": {
-      "indicators": [
-        {
-          "category": "Inconsistent Timeline",
-          "description": "Claim reported 45 days after the stated incident date",
-          "severity": "high",
-          "confidence": 91
-        },
-        {
-          "category": "Missing Documentation",
-          "description": "No police report for a claim exceeding $18,700 involving component theft",
-          "severity": "high",
-          "confidence": 88
-        },
-        {
-          "category": "Suspicious Description",
-          "description": "Vague description — no specific date, time, or parking location",
-          "severity": "medium",
-          "confidence": 72
-        },
-        {
-          "category": "Pattern Match",
-          "description": "Third vandalism/theft claim in three years, escalating values",
-          "severity": "medium",
-          "confidence": 78
-        }
-      ],
-      "summary": "This claim raises significant concerns warranting human review. The 45-day reporting delay is the most prominent red flag. The absence of a police report for a $18,700 theft involving a catalytic converter further undermines credibility.\n\nThe pattern of three escalating vandalism/theft claims over three years is consistent with a staged claims strategy.",
-      "key_concerns": [
-        "45-day reporting delay",
-        "No police report for significant theft",
-        "Third escalating claim in 3 years"
-      ],
+      "indicators": [],
+      "summary": "This is a straightforward and well-documented rear-end collision claim. The dashcam footage provides independent verification of the incident, the damage described is entirely consistent with the type of impact, and the claimed amount of £3,200 is reasonable for the repairs listed.\n\nThe claimant has no prior claims history, reported on the same day, and the other driver's details were exchanged at the scene. There are no fraud indicators present.",
+      "key_concerns": [],
       "positive_factors": [
-        "Vehicle damage types are plausible"
+        "Dashcam footage corroborates account",
+        "Same-day reporting",
+        "Third party details exchanged",
+        "No previous claims",
+        "Damage consistent with described impact",
+        "Reasonable claim amount"
       ],
-      "recommendation": "Request police report, specific incident location and date, and explanation for delay.",
-      "estimated_legitimate_value": null
+      "recommendation": "Approve claim. Verify dashcam footage and process third-party recovery against Mr P. Collins' insurer.",
+      "estimated_legitimate_value": 3200
     },
-    "submittedAt": "2026-03-18T16:45:00Z",
+    "submittedAt": "2026-03-18T14:20:00Z",
     "auditTrail": [
       {
-        "timestamp": "2026-03-18T16:45:00Z",
+        "timestamp": "2026-03-18T14:20:00Z",
         "actor": "System",
         "action": "submitted",
-        "notes": ""
+        "notes": "0 document(s) attached"
       },
       {
-        "timestamp": "2026-03-18T16:45:01Z",
-        "actor": "System",
-        "action": "escalated",
-        "notes": "Medium risk — auto-escalated to review queue"
+        "timestamp": "2026-03-19T10:00:00Z",
+        "actor": "Sarah Mitchell",
+        "action": "approved",
+        "notes": "Dashcam verified. Clean claim, processing payment."
       }
     ]
   },
   {
     "id": "CLM-2026-0004",
     "claimType": "property",
-    "claimantName": "Sandra Kowalski",
-    "policyNumber": "POL-2025-7723",
+    "claimantName": "Emma Thompson",
+    "policyNumber": "POL-2024-3358",
     "incidentDate": "2026-03-20",
-    "reportDate": "2026-03-21",
-    "claimedAmount": 145000,
-    "incidentLocation": "2214 Riverside Drive, New Orleans, LA",
-    "incidentDescription": "House fire started in the kitchen late at night while I was asleep. Fire spread to the living room and upstairs bedrooms.",
-    "damageDescription": "Structural fire damage to kitchen and living room. Smoke damage throughout. Complete loss of furniture, electronics, clothing, jewellery collection, and family heirlooms. Estimated $145,000.",
-    "witnesses": "Fire department (Station 12)",
-    "policeReport": "Fire Marshal: FMI-2026-0892",
-    "previousClaims": "1 (2025 storm damage, $45,000)",
+    "reportDate": "2026-03-20",
+    "claimedAmount": 8900,
+    "incidentLocation": "7 Hawthorn Avenue, Didsbury, Manchester M20 6GH",
+    "incidentDescription": "Burst pipe in the loft caused significant water damage to the master bedroom ceiling and first-floor bathroom. Discovered water coming through the ceiling at approximately 6pm. Emergency plumber attended within the hour and confirmed a burst joint on the central heating feed pipe.",
+    "damageDescription": "Collapsed ceiling plaster in master bedroom (approx 8 sqm), saturated carpet and underlay requiring replacement, water-damaged bedroom furniture (wardrobe, bedside tables), damaged bathroom floor tiles where water pooled.",
+    "witnesses": "Emergency plumber — Atlas Plumbing Services, Manchester (invoice ref APL-2026-0341)",
+    "policeReport": "N/A",
+    "previousClaims": "1 (2022 accidental damage — broken window, £380)",
     "files": [],
-    "assignedTo": "james.whitfield@claimlens.com",
-    "owner": "demo2",
-    "status": "pending-review",
-    "riskLevel": "high",
-    "fraudScore": 79,
+    "assignedTo": null,
+    "owner": "demo1",
+    "status": "approved",
+    "riskLevel": "low",
+    "fraudScore": 12,
     "analysis": {
       "indicators": [
         {
-          "category": "Inflated Estimate",
-          "description": "Contents claim of $145,000 is 2–4x the typical range for this property type",
-          "severity": "high",
-          "confidence": 86
-        },
-        {
-          "category": "Pattern Match",
-          "description": "$145,000 claim follows a $45,000 claim just 12 months prior",
-          "severity": "high",
-          "confidence": 79
-        },
-        {
-          "category": "Suspicious Description",
-          "description": "Family heirlooms and jewellery without pre-incident documentation",
-          "severity": "medium",
-          "confidence": 68
-        },
-        {
-          "category": "Missing Documentation",
-          "description": "Fire Marshal investigation still pending — cause not confirmed",
-          "severity": "medium",
-          "confidence": 61
+          "category": "Other",
+          "description": "Single minor prior claim in 2022 (£380) — not a concern but noted for completeness",
+          "severity": "low",
+          "confidence": 15
         }
       ],
-      "summary": "This claim requires careful scrutiny. The contents claim of $145,000 is exceptionally high and inconsistent with typical household contents for the property type. A prior $45,000 claim 12 months ago creates a pattern.\n\nThe Fire Marshal investigation should be cross-referenced immediately before any payment is authorised.",
-      "key_concerns": [
-        "Contents value 2–4x typical range",
-        "Second large claim in 12 months",
-        "No pre-incident documentation for high-value items"
-      ],
+      "summary": "This is a well-documented and credible escape of water claim. The emergency plumber attended promptly and confirmed the cause as a burst joint on the central heating feed pipe, providing an independent professional assessment.\n\nThe damage described is entirely consistent with a loft-level pipe burst — ceiling collapse, water tracking through to the floor below, and saturation of soft furnishings. The claimed amount of £8,900 is within expected range for this type and extent of damage.",
+      "key_concerns": [],
       "positive_factors": [
-        "Fire department confirms incident occurred",
-        "Prompt reporting"
+        "Plumber confirmed cause independently",
+        "Same-day reporting",
+        "Damage consistent with described event",
+        "Claim amount proportionate",
+        "Professional invoice provided"
       ],
-      "recommendation": "Hold pending Fire Marshal conclusion. Require itemised contents list with receipts. Commission independent assessment.",
-      "estimated_legitimate_value": 55000
+      "recommendation": "Approve claim. Commission loss adjuster for standard verification. Process settlement.",
+      "estimated_legitimate_value": 8900
     },
-    "submittedAt": "2026-03-21T08:15:00Z",
+    "submittedAt": "2026-03-20T19:45:00Z",
     "auditTrail": [
       {
-        "timestamp": "2026-03-21T08:15:00Z",
+        "timestamp": "2026-03-20T19:45:00Z",
         "actor": "System",
         "action": "submitted",
-        "notes": ""
+        "notes": "0 document(s) attached"
       },
       {
-        "timestamp": "2026-03-21T08:15:01Z",
-        "actor": "System",
-        "action": "escalated",
-        "notes": "High risk — auto-escalated to review queue"
+        "timestamp": "2026-03-21T09:30:00Z",
+        "actor": "David Chen",
+        "action": "approved",
+        "notes": "Plumber invoice verified. Standard escape of water claim. Approved for settlement."
       }
     ]
   },
   {
     "id": "CLM-2026-0005",
     "claimType": "auto",
-    "claimantName": "Vincent Delacroix",
-    "policyNumber": "POL-2024-5541",
-    "incidentDate": "2026-03-12",
-    "reportDate": "2026-03-13",
-    "claimedAmount": 87000,
-    "incidentLocation": "Mountain Road, Aspen, CO",
-    "incidentDescription": "Vehicle went off a mountain road into a ravine after swerving to avoid a deer. The vehicle is not recoverable.",
-    "damageDescription": "Total loss — 2024 Mercedes-AMG G63. Fell approximately 200 feet into a ravine. Cannot be retrieved for inspection.",
-    "witnesses": "None",
-    "policeReport": "N/A — remote location",
-    "previousClaims": "3 (2025 total loss $72k; 2024 theft $38k; 2023 collision $24k)",
+    "claimantName": "Michael Brown",
+    "policyNumber": "POL-2025-8894",
+    "incidentDate": "2026-03-22",
+    "reportDate": "2026-03-24",
+    "claimedAmount": 28000,
+    "incidentLocation": "B4100 Banbury Road, near Gaydon, Warwickshire",
+    "incidentDescription": "Lost control of vehicle on a bend and collided with a tree. The road was wet and I was travelling at approximately 40mph. The vehicle spun and hit the tree on the passenger side. I was alone in the car.",
+    "damageDescription": "Severe passenger-side impact damage. Both passenger doors crushed inward, B-pillar deformed, passenger airbags deployed, front suspension damaged. Vehicle likely a write-off. 2024 Audi A4 S-Line.",
+    "witnesses": "Passing motorist called emergency services — name not obtained. Two witnesses gave conflicting accounts of speed to attending officers.",
+    "policeReport": "WP-2026-RT-04412",
+    "previousClaims": "1 (2024 single-vehicle accident, £14,200)",
     "files": [],
-    "assignedTo": "james.whitfield@claimlens.com",
-    "owner": "demo2",
-    "status": "rejected",
-    "riskLevel": "high",
-    "fraudScore": 94,
+    "assignedTo": null,
+    "owner": "demo1",
+    "status": "pending-review",
+    "riskLevel": "medium",
+    "fraudScore": 52,
     "analysis": {
       "indicators": [
         {
-          "category": "Pattern Match",
-          "description": "Fourth major loss in three years, escalating values totalling $221,000",
-          "severity": "high",
-          "confidence": 97
+          "category": "Suspicious Description",
+          "description": "Witnesses gave conflicting statements about vehicle speed — one stated \"well over 60mph\" contradicting the claimant's stated 40mph",
+          "severity": "medium",
+          "confidence": 76
         },
         {
-          "category": "Missing Documentation",
-          "description": "No police report. Unrecoverable vehicle eliminates independent inspection.",
-          "severity": "high",
-          "confidence": 95
+          "category": "Pattern Match",
+          "description": "Second single-vehicle accident in two years with escalating values (£14.2k → £28k)",
+          "severity": "medium",
+          "confidence": 68
+        },
+        {
+          "category": "Inconsistent Timeline",
+          "description": "48-hour delay in reporting despite police attendance at the scene",
+          "severity": "low",
+          "confidence": 52
         },
         {
           "category": "Suspicious Description",
-          "description": "\"Swerved to avoid deer\" is among the most common staged total loss narratives",
-          "severity": "high",
-          "confidence": 89
-        },
-        {
-          "category": "Geographic Inconsistency",
-          "description": "Miami resident on a Colorado mountain road with no travel documentation",
-          "severity": "medium",
-          "confidence": 74
+          "description": "Single-vehicle loss-of-control on a well-maintained A-road in moderate conditions",
+          "severity": "low",
+          "confidence": 41
         }
       ],
-      "summary": "This claim is strongly consistent with a staged vehicle total loss scheme. Four escalating claims totalling $221,000 in three years, combined with an unrecoverable vehicle that cannot be inspected and a classic fraud narrative, presents an extraordinarily suspicious picture.\n\nThis claim should be denied and referred to the Special Investigations Unit immediately.",
+      "summary": "This claim warrants human review primarily due to the conflicting witness statements regarding vehicle speed. If the claimant was travelling significantly faster than the stated 40mph, this could constitute a policy breach for reckless driving and affect the validity of the claim.\n\nThe pattern of two single-vehicle accidents in two years with escalating values is noteworthy but not conclusive on its own. The 48-hour reporting delay is unusual given that police attended the scene, but may have a reasonable explanation such as hospitalisation.",
       "key_concerns": [
-        "Four escalating claims totalling $221k",
-        "Unrecoverable vehicle",
-        "No police report",
-        "Classic staged total loss narrative"
+        "Conflicting witness statements on speed",
+        "Second single-vehicle accident in 2 years",
+        "Possible policy breach if speed was excessive"
       ],
-      "positive_factors": [],
-      "recommendation": "Reject. Refer to Special Investigations Unit. Review all prior claims. Consider NICB referral.",
-      "estimated_legitimate_value": 0
+      "positive_factors": [
+        "Police attended and filed report",
+        "Damage pattern consistent with described impact",
+        "Emergency services called by third party"
+      ],
+      "recommendation": "Obtain full police report including witness statements. Verify claimant's account of speed against physical evidence. Check for any driving convictions. Clarify reason for reporting delay.",
+      "estimated_legitimate_value": 28000
     },
-    "submittedAt": "2026-03-13T11:20:00Z",
+    "submittedAt": "2026-03-24T08:10:00Z",
     "auditTrail": [
       {
-        "timestamp": "2026-03-13T11:20:00Z",
+        "timestamp": "2026-03-24T08:10:00Z",
         "actor": "System",
         "action": "submitted",
-        "notes": ""
+        "notes": "0 document(s) attached"
       },
       {
-        "timestamp": "2026-03-13T11:20:01Z",
+        "timestamp": "2026-03-24T08:10:01Z",
         "actor": "System",
         "action": "escalated",
-        "notes": "High risk — auto-escalated to review queue"
-      },
-      {
-        "timestamp": "2026-03-15T14:30:00Z",
-        "actor": "James Whitfield",
-        "action": "rejected",
-        "notes": "Referred to SIU. Pattern of fraudulent claims confirmed. Prior claims under review."
+        "notes": "Medium risk (score 52) — auto-escalated to review queue"
       }
     ]
   },
   {
     "id": "CLM-2026-0006",
     "claimType": "property",
-    "claimantName": "Diane Okonkwo",
-    "policyNumber": "POL-2025-9912",
+    "claimantName": "Lisa Johnson",
+    "policyNumber": "POL-2023-7156",
     "incidentDate": "2026-03-25",
     "reportDate": "2026-03-26",
-    "claimedAmount": 12300,
-    "incidentLocation": "512 Pine Avenue, Atlanta, GA",
-    "incidentDescription": "Returned home from a weekend trip to find the property had been burgled. Multiple items stolen.",
-    "damageDescription": "Stolen: laptop, 65\" TV, gaming console, camera equipment, diamond necklace, engagement ring upgrade, three designer handbags, approximately $2,000 cash.",
-    "witnesses": "None",
-    "policeReport": "RPT-2026-88341",
-    "previousClaims": "0",
+    "claimedAmount": 67000,
+    "incidentLocation": "Unit 4, Riverside Business Park, Tewkesbury, Gloucestershire GL20 5QR",
+    "incidentDescription": "Fire at commercial premises discovered by security patrol at approximately 3:30am. The fire destroyed the main warehouse area and stock room. The business has been struggling with reduced orders since late 2025 and we were considering downsizing.",
+    "damageDescription": "Complete destruction of warehouse contents including £38,000 of stock, £15,000 of warehouse equipment (racking, forklifts, packing machinery), £8,000 of office equipment, and £6,000 of building fixtures and fittings.",
+    "witnesses": "Security guard — Watchman Security Services (patrol log ref WS-2026-0892)",
+    "policeReport": "GC-2026-AR-01187 — Arson investigation opened",
+    "previousClaims": "1 (2025 business interruption claim — £28,000, disputed and withdrawn)",
+    "files": [],
+    "assignedTo": "james.whitfield@claimlens.com",
+    "owner": "demo1",
+    "status": "pending-review",
+    "riskLevel": "high",
+    "fraudScore": 91,
+    "analysis": {
+      "indicators": [
+        {
+          "category": "Suspicious Description",
+          "description": "Claimant voluntarily disclosed business was \"struggling with reduced orders\" and \"considering downsizing\" — classic financial motive for arson",
+          "severity": "high",
+          "confidence": 94
+        },
+        {
+          "category": "Pattern Match",
+          "description": "Previous £28,000 business interruption claim was disputed and withdrawn — suggests prior attempt to recover losses through insurance",
+          "severity": "high",
+          "confidence": 87
+        },
+        {
+          "category": "Suspicious Description",
+          "description": "Fire at 3:30am when premises were unoccupied — arson fires are disproportionately set at night",
+          "severity": "high",
+          "confidence": 82
+        },
+        {
+          "category": "Missing Documentation",
+          "description": "Stock valuation of £38,000 requires verification against recent purchase invoices and accounts — struggling businesses often have depleted stock",
+          "severity": "medium",
+          "confidence": 76
+        },
+        {
+          "category": "Other",
+          "description": "Police have opened an arson investigation (ref GC-2026-AR-01187) — must be resolved before settlement",
+          "severity": "high",
+          "confidence": 98
+        }
+      ],
+      "summary": "This claim presents an exceptionally high-risk profile. The combination of admitted financial difficulties, a withdrawn prior insurance claim, and a nighttime fire at unoccupied commercial premises creates a textbook arson-for-profit scenario.\n\nThe claimant's voluntary disclosure of business struggles, while appearing transparent, actually strengthens the motive case. The previous disputed claim that was withdrawn suggests the claimant has considered using insurance to address financial shortfalls before.\n\nThe police arson investigation is the determining factor. Under no circumstances should this claim be settled before the investigation concludes.",
+      "key_concerns": [
+        "Admitted financial motive",
+        "Active arson investigation",
+        "Prior disputed claim withdrawn",
+        "Nighttime fire at empty premises",
+        "Stock valuation requires verification"
+      ],
+      "positive_factors": [
+        "Security patrol provides discovery timeline",
+        "Claimant was transparent about financial difficulties"
+      ],
+      "recommendation": "Place on hold pending police arson investigation. Commission forensic accountant to verify stock levels against recent trading accounts. Do not authorise any interim payments.",
+      "estimated_legitimate_value": null
+    },
+    "submittedAt": "2026-03-26T10:00:00Z",
+    "auditTrail": [
+      {
+        "timestamp": "2026-03-26T10:00:00Z",
+        "actor": "System",
+        "action": "submitted",
+        "notes": "0 document(s) attached"
+      },
+      {
+        "timestamp": "2026-03-26T10:00:01Z",
+        "actor": "System",
+        "action": "escalated",
+        "notes": "High risk (score 91) — auto-escalated to review queue"
+      }
+    ]
+  },
+  {
+    "id": "CLM-2026-0007",
+    "claimType": "auto",
+    "claimantName": "Robert Williams",
+    "policyNumber": "POL-2025-1193",
+    "incidentDate": "2026-03-05",
+    "reportDate": "2026-03-07",
+    "claimedAmount": 15600,
+    "incidentLocation": "Junction of A57 and Glossop Road, Sheffield, South Yorkshire",
+    "incidentDescription": "Rear-ended at a roundabout at low speed. Claiming for vehicle repairs and personal injury — whiplash to neck and upper back. Unable to work for the past two weeks. Seeking physiotherapy costs and loss of earnings.",
+    "damageDescription": "Vehicle damage: rear bumper scuffed and cracked (estimated £1,800 repair). Personal injury: whiplash, claiming £8,000 general damages plus £5,800 loss of earnings and physiotherapy.",
+    "witnesses": "Other driver admitted fault at scene — Mr A. Patel",
+    "policeReport": "N/A — minor collision",
+    "previousClaims": "1 (2024 whiplash claim from separate RTA, £9,200)",
     "files": [],
     "assignedTo": null,
     "owner": "demo2",
     "status": "pending-review",
     "riskLevel": "medium",
-    "fraudScore": 44,
+    "fraudScore": 61,
     "analysis": {
       "indicators": [
         {
           "category": "Missing Documentation",
-          "description": "High-value jewellery items without appraisals or purchase receipts",
+          "description": "No medical evidence provided for whiplash — GP or A&E records not submitted",
+          "severity": "high",
+          "confidence": 85
+        },
+        {
+          "category": "Inflated Estimate",
+          "description": "Vehicle damage of £1,800 suggests low-speed impact inconsistent with £8,000 whiplash claim plus loss of earnings",
           "severity": "medium",
-          "confidence": 62
+          "confidence": 78
+        },
+        {
+          "category": "Pattern Match",
+          "description": "Second whiplash claim in two years — prior claim of £9,200 in 2024",
+          "severity": "medium",
+          "confidence": 72
         },
         {
           "category": "Suspicious Description",
-          "description": "Cash claim of $2,000 is unverifiable — a common fraud vector",
+          "description": "Loss of earnings claim of £5,800 for two weeks implies annual salary of £150,000+ — requires verification",
           "severity": "medium",
-          "confidence": 71
+          "confidence": 64
+        }
+      ],
+      "summary": "This claim follows a well-known pattern in UK motor insurance fraud: a genuine minor collision is used as the basis for an inflated personal injury claim. The vehicle damage of £1,800 indicates a low-speed impact, yet the whiplash and associated claims total £13,800 — a 7.7x multiplier over the property damage.\n\nThe absence of any medical evidence is a significant concern. Genuine whiplash sufferers typically attend A&E or their GP promptly. The loss of earnings figure implies an implausibly high salary that needs verification.\n\nThe prior whiplash claim from 2024 establishes a pattern that is consistent with opportunistic injury fraud.",
+      "key_concerns": [
+        "No medical evidence for whiplash",
+        "Injury claim 7.7x vehicle damage",
+        "Second whiplash claim in 2 years",
+        "Unverified loss of earnings"
+      ],
+      "positive_factors": [
+        "Other driver admitted fault",
+        "Vehicle damage is genuine",
+        "Reported within 48 hours"
+      ],
+      "recommendation": "Require GP or hospital records before progressing injury claim. Verify employment and salary with employer. Consider independent medical examination. Settle vehicle damage separately if verified.",
+      "estimated_legitimate_value": 1800
+    },
+    "submittedAt": "2026-03-07T16:30:00Z",
+    "auditTrail": [
+      {
+        "timestamp": "2026-03-07T16:30:00Z",
+        "actor": "System",
+        "action": "submitted",
+        "notes": "0 document(s) attached"
+      },
+      {
+        "timestamp": "2026-03-07T16:30:01Z",
+        "actor": "System",
+        "action": "escalated",
+        "notes": "Medium risk (score 61) — auto-escalated to review queue"
+      }
+    ]
+  },
+  {
+    "id": "CLM-2026-0008",
+    "claimType": "property",
+    "claimantName": "Karen Davies",
+    "policyNumber": "POL-2024-9927",
+    "incidentDate": "2026-03-12",
+    "reportDate": "2026-03-12",
+    "claimedAmount": 4100,
+    "incidentLocation": "23 Cwm Rhondda Terrace, Treorchy, Rhondda Cynon Taf CF42 6PA",
+    "incidentDescription": "Shed at the rear of the property was broken into overnight. Padlock was forced open. Garden tools, a lawnmower, power tools, and a bicycle were stolen. Discovered at approximately 8am when I went to get the lawnmower.",
+    "damageDescription": "Stolen items: Stihl chainsaw (£450), Bosch drill set (£280), Makita circular saw (£320), Honda lawnmower (£600), Specialized mountain bike (£1,200), assorted hand tools (£350), and a pressure washer (£400). Damaged shed door and padlock (£500 to replace).",
+    "witnesses": "Neighbour Mrs G. Evans heard noise at approximately 2am but did not investigate",
+    "policeReport": "SWP-2026-RCT-04218",
+    "previousClaims": "0",
+    "files": [],
+    "assignedTo": null,
+    "owner": "demo2",
+    "status": "approved",
+    "riskLevel": "low",
+    "fraudScore": 14,
+    "analysis": {
+      "indicators": [
+        {
+          "category": "Other",
+          "description": "Individual item values are plausible but should be verified against receipts where available",
+          "severity": "low",
+          "confidence": 25
+        }
+      ],
+      "summary": "This is a straightforward and credible shed burglary claim. The incident was reported on the same day, a police report was filed promptly, and a neighbour independently corroborates suspicious noise during the night.\n\nThe claimed items are typical targets for shed burglaries — power tools, garden equipment, and a bicycle. The individual valuations are within market range and the total of £4,100 is proportionate. The claimant has no previous claims history.",
+      "key_concerns": [],
+      "positive_factors": [
+        "Same-day reporting",
+        "Police report filed",
+        "Neighbour corroboration",
+        "No previous claims",
+        "Item values within market range",
+        "Forced entry evidence (broken padlock)"
+      ],
+      "recommendation": "Approve claim. Request receipts where available for higher-value items (bicycle, chainsaw). Standard settlement processing.",
+      "estimated_legitimate_value": 4100
+    },
+    "submittedAt": "2026-03-12T10:15:00Z",
+    "auditTrail": [
+      {
+        "timestamp": "2026-03-12T10:15:00Z",
+        "actor": "System",
+        "action": "submitted",
+        "notes": "0 document(s) attached"
+      },
+      {
+        "timestamp": "2026-03-13T11:45:00Z",
+        "actor": "Sarah Mitchell",
+        "action": "approved",
+        "notes": "Receipts provided for bicycle and chainsaw. Police report confirmed. Clean claim."
+      }
+    ]
+  },
+  {
+    "id": "CLM-2026-0009",
+    "claimType": "auto",
+    "claimantName": "Thomas Hughes",
+    "policyNumber": "POL-2024-5582",
+    "incidentDate": "2026-02-20",
+    "reportDate": "2026-03-14",
+    "claimedAmount": 92000,
+    "incidentLocation": "Private driveway, 8 The Fairways, Virginia Water, Surrey GU25 4PH",
+    "incidentDescription": "My 2025 Porsche 911 Turbo S was stolen from my driveway. I was away on business in Dubai for three weeks and only discovered the theft when I returned home. The gates were closed and there was no sign of forced entry to the property.",
+    "damageDescription": "Total loss — 2025 Porsche 911 Turbo S in GT Silver Metallic, specification includes Sport Chrono package, PCCB ceramic brakes, full leather interior. Guide value £92,000.",
+    "witnesses": "None — property was unoccupied for three weeks",
+    "policeReport": "N/A — reporting to police pending",
+    "previousClaims": "2 (2025 high-value watch theft £35,000 — settled; 2024 vehicle damage £12,000)",
+    "files": [],
+    "assignedTo": "james.whitfield@claimlens.com",
+    "owner": "demo2",
+    "status": "pending-review",
+    "riskLevel": "high",
+    "fraudScore": 93,
+    "analysis": {
+      "indicators": [
+        {
+          "category": "Inconsistent Timeline",
+          "description": "Theft reported 22 days after the earliest possible date — claimed 3-week absence but exact theft date unknown",
+          "severity": "high",
+          "confidence": 94
         },
         {
           "category": "Missing Documentation",
-          "description": "No mention of forced entry — typical burglaries leave break-in evidence",
-          "severity": "low",
-          "confidence": 48
+          "description": "Police report still not filed at time of insurance claim — extraordinary for a £92,000 vehicle",
+          "severity": "high",
+          "confidence": 96
+        },
+        {
+          "category": "Suspicious Description",
+          "description": "No sign of forced entry to a gated property — suggests either keys were used or vehicle was removed with owner cooperation",
+          "severity": "high",
+          "confidence": 88
+        },
+        {
+          "category": "Pattern Match",
+          "description": "Third high-value claim in two years totalling £139,000 — includes a £35,000 watch theft claim that follows a similar pattern",
+          "severity": "high",
+          "confidence": 91
+        },
+        {
+          "category": "Geographic Inconsistency",
+          "description": "Claimed to be in Dubai for 3 weeks — travel documentation should be verifiable but has not been provided",
+          "severity": "medium",
+          "confidence": 72
         }
       ],
-      "summary": "This claim has moderate concerns but overall presents as plausible. A police report was promptly filed, which is a strong positive indicator. The primary concerns are the unverifiable cash claim and the absence of jewellery documentation.\n\nBrief additional verification is warranted rather than outright suspicion.",
+      "summary": "This claim exhibits virtually every hallmark of staged vehicle theft. The 22-day reporting delay, absence of a police report for a £92,000 vehicle, no evidence of forced entry, and a pattern of escalating high-value claims create an overwhelming case for investigation.\n\nThe similarity to the 2025 watch theft claim is particularly concerning — both involve high-value items reported stolen while the claimant was allegedly away, with delayed reporting and no police involvement.\n\nThe absence of forced entry to a gated property strongly suggests the vehicle was removed with keys, which points to either sale, export, or destruction by arrangement.",
       "key_concerns": [
-        "Unverifiable $2,000 cash claim",
-        "No forced entry mentioned",
-        "Jewellery lacks documentation"
+        "22-day reporting delay",
+        "No police report for £92k theft",
+        "No forced entry",
+        "Third claim totalling £139k",
+        "Pattern matches prior watch theft claim"
       ],
       "positive_factors": [
-        "Police report filed promptly",
-        "No previous claims",
-        "Electronics verifiable via serial numbers"
+        "Vehicle specification is verifiable"
       ],
-      "recommendation": "Request proof of purchase for electronics, jewellery appraisals, and police report confirmation of entry point. Exclude cash component pending evidence.",
-      "estimated_legitimate_value": 9500
+      "recommendation": "Do not settle. Require police report as condition of claim. Request travel documentation (flights, hotel, passport stamps). Commission investigation into vehicle whereabouts (ANPR, shipping records). Refer to SIU immediately.",
+      "estimated_legitimate_value": null
     },
-    "submittedAt": "2026-03-26T09:45:00Z",
+    "submittedAt": "2026-03-14T15:20:00Z",
     "auditTrail": [
       {
-        "timestamp": "2026-03-26T09:45:00Z",
+        "timestamp": "2026-03-14T15:20:00Z",
         "actor": "System",
         "action": "submitted",
-        "notes": ""
+        "notes": "0 document(s) attached"
       },
       {
-        "timestamp": "2026-03-26T09:45:01Z",
+        "timestamp": "2026-03-14T15:20:01Z",
         "actor": "System",
         "action": "escalated",
-        "notes": "Medium risk — auto-escalated to review queue"
+        "notes": "High risk (score 93) — auto-escalated to review queue"
+      }
+    ]
+  },
+  {
+    "id": "CLM-2026-0010",
+    "claimType": "property",
+    "claimantName": "Patricia Scott",
+    "policyNumber": "POL-2025-4416",
+    "incidentDate": "2026-03-16",
+    "reportDate": "2026-03-17",
+    "claimedAmount": 6700,
+    "incidentLocation": "41 Larchfield Road, Balerno, Edinburgh EH14 7NL",
+    "incidentDescription": "Severe storm on the night of 16th March caused significant damage to the roof. High winds dislodged ridge tiles and stripped several courses of slates from the south-facing elevation. Rainwater subsequently entered the loft space and damaged stored belongings.",
+    "damageDescription": "Roof repairs: replacement of 12 ridge tiles and approximately 40 slates, repair of lead flashing (£4,200). Water damage to loft contents including stored clothing, books, and Christmas decorations (£800). Emergency tarpaulin by roofer (£200). Internal ceiling stain repair and redecoration in spare bedroom (£1,500).",
+    "witnesses": "Neighbour at number 43 sustained similar roof damage from the same storm",
+    "policeReport": "N/A — weather event",
+    "previousClaims": "0",
+    "files": [],
+    "assignedTo": null,
+    "owner": "demo2",
+    "status": "approved",
+    "riskLevel": "low",
+    "fraudScore": 6,
+    "analysis": {
+      "indicators": [],
+      "summary": "This is an entirely credible storm damage claim supported by strong corroborating evidence. Met Office weather records confirm a severe weather warning was issued for the Lothian region on the night of 16th March 2026, with wind gusts exceeding 75mph recorded at Edinburgh Airport.\n\nThe neighbour at number 43 sustained similar damage from the same event, providing independent corroboration. The damage described is entirely consistent with high wind exposure on a south-facing elevation, and the repair costs are proportionate and well-itemised.",
+      "key_concerns": [],
+      "positive_factors": [
+        "Weather records confirm severe storm",
+        "Neighbour corroboration",
+        "Next-day reporting",
+        "Well-itemised claim",
+        "No previous claims",
+        "Proportionate amounts"
+      ],
+      "recommendation": "Approve claim. Standard weather damage processing. Roofer quote is within expected range for Edinburgh area.",
+      "estimated_legitimate_value": 6700
+    },
+    "submittedAt": "2026-03-17T08:50:00Z",
+    "auditTrail": [
+      {
+        "timestamp": "2026-03-17T08:50:00Z",
+        "actor": "System",
+        "action": "submitted",
+        "notes": "0 document(s) attached"
+      },
+      {
+        "timestamp": "2026-03-18T09:15:00Z",
+        "actor": "David Chen",
+        "action": "approved",
+        "notes": "Met Office data confirmed. Neighbour claim also received. Approved for standard processing."
+      }
+    ]
+  },
+  {
+    "id": "CLM-2026-0011",
+    "claimType": "auto",
+    "claimantName": "Gary Wilson",
+    "policyNumber": "POL-2025-7738",
+    "incidentDate": "2026-03-19",
+    "reportDate": "2026-03-20",
+    "claimedAmount": 31000,
+    "incidentLocation": "Lidl car park, Stratford Road, Sparkbrook, Birmingham B11 1QJ",
+    "incidentDescription": "Multi-vehicle collision in a car park. A van reversed into my vehicle which then hit the car behind me. Three vehicles damaged in total. My vehicle is a 2024 Mercedes C-Class AMG Line.",
+    "damageDescription": "Front and rear impact damage. Front bumper, bonnet, headlights, radiator damaged from secondary collision. Rear bumper, boot lid, and tail lights damaged from initial van impact. Vehicle not driveable. Estimated write-off.",
+    "witnesses": "Other two drivers present — all exchanged details. CCTV may be available from Lidl.",
+    "policeReport": "WMP-2026-SP-09917",
+    "previousClaims": "3 (2025 multi-vehicle £18k; 2024 multi-vehicle £14k; 2024 rear-end collision £8.5k)",
+    "files": [],
+    "assignedTo": "james.whitfield@claimlens.com",
+    "owner": "demo2",
+    "status": "pending-review",
+    "riskLevel": "high",
+    "fraudScore": 89,
+    "analysis": {
+      "indicators": [
+        {
+          "category": "Pattern Match",
+          "description": "Fourth collision claim in two years totalling £71,500 — three are multi-vehicle incidents in car parks, a pattern strongly associated with organised crash-for-cash rings",
+          "severity": "high",
+          "confidence": 96
+        },
+        {
+          "category": "Suspicious Description",
+          "description": "Multi-vehicle car park collision follows identical pattern to 2025 and 2024 claims — same mechanism (van reverses into stationary vehicle)",
+          "severity": "high",
+          "confidence": 92
+        },
+        {
+          "category": "Other",
+          "description": "Birmingham and West Midlands are identified hotspots for crash-for-cash fraud rings by the Insurance Fraud Bureau",
+          "severity": "high",
+          "confidence": 88
+        },
+        {
+          "category": "Inflated Estimate",
+          "description": "Claimed write-off at £31,000 for front and rear bumper/panel damage to a C-Class — repair may be more economical",
+          "severity": "medium",
+          "confidence": 65
+        },
+        {
+          "category": "Suspicious Description",
+          "description": "Other drivers \"all exchanged details\" readily — in organised fraud rings, all parties are cooperating",
+          "severity": "medium",
+          "confidence": 71
+        }
+      ],
+      "summary": "This claim has an extremely high probability of being part of an organised crash-for-cash fraud ring. Four claims in two years — three involving multi-vehicle collisions in car parks with the identical mechanism of a van reversing into the claimant's vehicle — is a textbook pattern.\n\nThe Birmingham area is a well-documented hotspot for this type of organised motor fraud. The Insurance Fraud Bureau should be contacted to check whether the other involved parties appear in their database.\n\nThe escalating values (£8.5k → £14k → £18k → £31k) and the cooperative behaviour of all parties are additional red flags consistent with a staged collision network.",
+      "key_concerns": [
+        "Fourth claim in 2 years",
+        "Three identical multi-vehicle car park incidents",
+        "Birmingham crash-for-cash hotspot",
+        "Escalating claim values",
+        "All parties cooperative"
+      ],
+      "positive_factors": [
+        "Police report filed",
+        "CCTV potentially available"
+      ],
+      "recommendation": "Refer to Insurance Fraud Bureau immediately. Request Lidl CCTV before it is overwritten. Cross-reference all involved parties against IFB database. Do not settle until investigation complete. Consider referral to police fraud unit.",
+      "estimated_legitimate_value": null
+    },
+    "submittedAt": "2026-03-20T11:40:00Z",
+    "auditTrail": [
+      {
+        "timestamp": "2026-03-20T11:40:00Z",
+        "actor": "System",
+        "action": "submitted",
+        "notes": "0 document(s) attached"
+      },
+      {
+        "timestamp": "2026-03-20T11:40:01Z",
+        "actor": "System",
+        "action": "escalated",
+        "notes": "High risk (score 89) — auto-escalated to review queue"
+      }
+    ]
+  },
+  {
+    "id": "CLM-2026-0012",
+    "claimType": "property",
+    "claimantName": "Susan Taylor",
+    "policyNumber": "POL-2024-6643",
+    "incidentDate": "2026-03-21",
+    "reportDate": "2026-03-23",
+    "claimedAmount": 18400,
+    "incidentLocation": "9 Beechwood Gardens, Harrogate, North Yorkshire HG2 8DL",
+    "incidentDescription": "Returned from a two-day stay at a hotel in York to find the house had been burgled. Entry appeared to be through the rear patio doors. Jewellery, watches, and designer items stolen from the master bedroom.",
+    "damageDescription": "Stolen items: diamond engagement ring (£6,500), Cartier Tank watch (£4,200), Omega Seamaster watch (£3,800), pearl necklace (£1,200), two pairs of designer earrings (£900), Tag Heuer watch (£1,100). Damage to rear patio door lock (£700).",
+    "witnesses": "None — property unoccupied for two days",
+    "policeReport": "NYP-2026-HG-03341",
+    "previousClaims": "1 (2025 accidental damage to engagement ring — claim withdrawn before settlement)",
+    "files": [],
+    "assignedTo": null,
+    "owner": "demo2",
+    "status": "pending-review",
+    "riskLevel": "medium",
+    "fraudScore": 56,
+    "analysis": {
+      "indicators": [
+        {
+          "category": "Missing Documentation",
+          "description": "No valuations, receipts, or insurance schedules provided for £17,700 of jewellery and watches — proof of ownership is essential for high-value items",
+          "severity": "high",
+          "confidence": 84
+        },
+        {
+          "category": "Pattern Match",
+          "description": "Prior claim for accidental damage to engagement ring was withdrawn — may indicate a previous attempt to claim on the same item",
+          "severity": "medium",
+          "confidence": 67
+        },
+        {
+          "category": "Suspicious Description",
+          "description": "Burglars targeted only high-value portable items from a single room — professional burglars or staged to maximise claim value",
+          "severity": "medium",
+          "confidence": 58
+        },
+        {
+          "category": "Inconsistent Timeline",
+          "description": "48-hour delay between return and reporting — claimant returned on 23rd March but incident occurred on 21st at the earliest",
+          "severity": "low",
+          "confidence": 42
+        }
+      ],
+      "summary": "This claim has moderate concerns centred primarily on the absence of documentation for nearly £18,000 of claimed jewellery and watches. Without valuations, receipts, photographs, or an insurance schedule listing these items, the claim cannot be verified.\n\nThe withdrawn 2025 claim for the engagement ring is particularly noteworthy. The same ring now appears in this theft claim at £6,500 — if the prior claim was withdrawn because the ring was not actually damaged, this could indicate it was always intended to be claimed through a different route.\n\nHowever, the burglary itself appears credible — there is physical evidence of forced entry and a police report was filed.",
+      "key_concerns": [
+        "No proof of ownership for £17,700 of items",
+        "Prior withdrawn claim on same engagement ring",
+        "Targeted theft of high-value items only"
+      ],
+      "positive_factors": [
+        "Police report filed",
+        "Physical evidence of forced entry",
+        "Specific item descriptions provided"
+      ],
+      "recommendation": "Request proof of purchase, valuations, or photographs for all claimed items. Cross-reference engagement ring against withdrawn 2025 claim. Obtain police investigation update. Consider independent jewellery valuation.",
+      "estimated_legitimate_value": 700
+    },
+    "submittedAt": "2026-03-23T14:10:00Z",
+    "auditTrail": [
+      {
+        "timestamp": "2026-03-23T14:10:00Z",
+        "actor": "System",
+        "action": "submitted",
+        "notes": "0 document(s) attached"
+      },
+      {
+        "timestamp": "2026-03-23T14:10:01Z",
+        "actor": "System",
+        "action": "escalated",
+        "notes": "Medium risk (score 56) — auto-escalated to review queue"
       }
     ]
   }
