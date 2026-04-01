@@ -13,6 +13,11 @@ const PORT = process.env.PORT || 3000;
 // Parse JSON bodies
 app.use(express.json({ limit: '10mb' }));
 
+// Serve the app at /login (landing page is at /)
+app.get('/login', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'app.html'));
+});
+
 // Serve frontend
 app.use(express.static(path.join(__dirname, 'public')));
 
