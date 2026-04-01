@@ -16,5 +16,11 @@
     "passwordHash": "43c27b4e263fa191a6a7ec198cd4d5b47d17413c49d77dc533a01720707e3202",
     "role": "user",
     "displayName": "Demo User 2"
+  },
+  {
+    "username": "Roberts",
+    "passwordHash": "1ac8c396da1e274c47a62f6106575bbadcc1236fccfa70763a11ea1e9dca1943",
+    "role": "user",
+    "displayName": "Roberts"
   }
 ]
