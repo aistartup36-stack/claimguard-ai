@@ -78,7 +78,7 @@ router.get('/reports/export/pdf', (req, res) => {
       <td style="font-family:monospace;font-size:11px">${c.id}</td>
       <td>${c.claimantName}</td>
       <td style="text-transform:capitalize">${c.claimType}</td>
-      <td>$${Number(c.claimedAmount).toLocaleString()}</td>
+      <td>\u00A3${Number(c.claimedAmount).toLocaleString('en-GB')}</td>
       <td>${c.riskLevel || '—'}</td>
       <td>${c.fraudScore != null ? c.fraudScore + '/100' : '—'}</td>
       <td>${statusLabels[c.status] || c.status}</td>

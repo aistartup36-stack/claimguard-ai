@@ -10,8 +10,8 @@ const claimsStore = require('../../store/claims');
 router.get('/stats', (req, res) => {
   const claims = claimsStore.getForUser(req.user.username, req.user.role);
   const total = claims.length;
-  const fraudDetected = claims.filter(c => c.status === 'rejected').length;
-  const moneySaved = claims.filter(c => c.status === 'rejected').reduce((s, c) => s + c.claimedAmount, 0);
+  const fraudDetected = claims.filter(c => c.riskLevel === 'high' || c.riskLevel === 'medium').length;
+  const moneySaved = claims.filter(c => c.riskLevel === 'high' && (c.status === 'pending-review' || c.status === 'rejected')).reduce((s, c) => s + c.claimedAmount, 0);
   const pendingReview = claims.filter(c => c.status === 'pending-review' || c.status === 'info-requested').length;
   const totalValue = claims.reduce((s, c) => s + c.claimedAmount, 0);
   const low = claims.filter(c => c.riskLevel === 'low').length;

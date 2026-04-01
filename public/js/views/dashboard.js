@@ -15,7 +15,7 @@ window.DashboardView = {
         <div class="stats-grid">
           ${this._statCard('blue', Utils.svgIcon('doc'), stats.total, 'Total Claims Processed', '')}
           ${this._statCard('red', Utils.svgIcon('warn'), stats.fraudDetected, 'Fraud Cases Detected', `${stats.total > 0 ? ((stats.fraudDetected/stats.total)*100).toFixed(0) : 0}% detection rate`)}
-          ${this._statCard('green', Utils.svgIcon('dollar'), null, 'Money Saved', Utils.fmt$(stats.moneySaved), true)}
+          ${this._statCard('green', Utils.svgIcon('pound'), null, 'Money Saved', Utils.fmt$(stats.moneySaved), true)}
           ${this._statCard('amber', Utils.svgIcon('clock'), stats.pendingReview, 'Pending Human Review', stats.pendingReview > 0 ? '<span style="color:#F59E0B">Requires attention</span>' : '')}
         </div>
 
