@@ -1,5 +1,5 @@
 /**
- * ClaimGuard AI — Auth Module
+ * ClaimLens AI — Auth Module
  * Simple password-based authentication with session cookies.
  */
 
@@ -35,7 +35,7 @@ setInterval(cleanExpiredSessions, 60 * 60 * 1000);
 
 function isValidSession(req) {
   const cookies = parseCookies(req.headers.cookie);
-  const token = cookies.claimguard_session;
+  const token = cookies.claimlens_session;
   if (!token || !sessions.has(token)) return false;
   const session = sessions.get(token);
   if (Date.now() - session.createdAt > SESSION_TTL_MS) {
@@ -61,7 +61,7 @@ router.post('/auth/login', (req, res) => {
   const token = crypto.randomBytes(32).toString('hex');
   sessions.set(token, { createdAt: Date.now() });
 
-  res.setHeader('Set-Cookie', `claimguard_session=${token}; HttpOnly; Path=/; Max-Age=86400; SameSite=Lax`);
+  res.setHeader('Set-Cookie', `claimlens_session=${token}; HttpOnly; Path=/; Max-Age=86400; SameSite=Lax`);
   res.json({ success: true });
 });
 
@@ -75,9 +75,9 @@ router.get('/auth/check', (req, res) => {
 
 router.post('/auth/logout', (req, res) => {
   const cookies = parseCookies(req.headers.cookie);
-  const token = cookies.claimguard_session;
+  const token = cookies.claimlens_session;
   if (token) sessions.delete(token);
-  res.setHeader('Set-Cookie', 'claimguard_session=; HttpOnly; Path=/; Max-Age=0; SameSite=Lax');
+  res.setHeader('Set-Cookie', 'claimlens_session=; HttpOnly; Path=/; Max-Age=0; SameSite=Lax');
   res.json({ success: true });
 });
 

@@ -1,4 +1,4 @@
-/* ── ClaimGuard AI — Shared Utilities ─────────────────────────────────────── */
+/* ── ClaimLens AI — Shared Utilities ──────────────────────────────────────── */
 
 window.Utils = {
   fmt$(n) { return '$' + Number(n || 0).toLocaleString('en-US'); },

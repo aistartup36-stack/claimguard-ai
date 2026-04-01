@@ -1,4 +1,4 @@
-/* ── ClaimGuard AI — App Router & Shared Components ──────────────────────── */
+/* ── ClaimLens AI — App Router & Shared Components ───────────────────────── */
 
 // ── Badges (shared component) ──────────────────────────────────────────────
 

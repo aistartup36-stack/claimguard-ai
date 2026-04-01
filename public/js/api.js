@@ -1,4 +1,4 @@
-/* ── ClaimGuard AI — API Client ───────────────────────────────────────────── */
+/* ── ClaimLens AI — API Client ────────────────────────────────────────────── */
 
 window.API = {
   _handleUnauth(r) {

@@ -13,9 +13,9 @@ const DEFAULTS = {
   escalationEnabled: true,
   sensitivity: 'medium',    // 'low' | 'medium' | 'high' (multiplier for heuristic)
   reviewers: [
-    'sarah.mitchell@claimguard.com',
-    'david.chen@claimguard.com',
-    'james.whitfield@claimguard.com'
+    'sarah.mitchell@claimlens.com',
+    'david.chen@claimlens.com',
+    'james.whitfield@claimlens.com'
   ],
   apiKeyConfigured: false
 };

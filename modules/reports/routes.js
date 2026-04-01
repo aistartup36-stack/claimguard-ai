@@ -57,7 +57,7 @@ router.get('/reports/export/csv', (req, res) => {
   ]);
 
   const csv = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
-  const filename = `claimguard-export-${new Date().toISOString().split('T')[0]}.csv`;
+  const filename = `claimlens-export-${new Date().toISOString().split('T')[0]}.csv`;
   res.setHeader('Content-Type', 'text/csv');
   res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
   res.send(csv);
@@ -82,7 +82,7 @@ router.get('/reports/export/pdf', (req, res) => {
       <td style="font-size:11px">${c.submittedAt ? new Date(c.submittedAt).toLocaleDateString('en-GB') : '—'}</td>
     </tr>`).join('');
 
-  const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>ClaimGuard AI — Claims Report</title>
+  const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>ClaimLens AI — Claims Report</title>
   <style>
     body{font-family:system-ui,Arial,sans-serif;font-size:13px;color:#1E293B;margin:32px;line-height:1.5}
     h1{font-size:22px;color:#0A1628;margin-bottom:4px}
@@ -94,13 +94,13 @@ router.get('/reports/export/pdf', (req, res) => {
     .footer{margin-top:24px;font-size:11px;color:#94A3B8;text-align:center}
     @media print{body{margin:16px}}
   </style></head><body>
-  <h1>🛡 ClaimGuard AI — Claims Report</h1>
+  <h1>🛡 ClaimLens AI — Claims Report</h1>
   <div class="meta">Generated: ${date} &nbsp;|&nbsp; ${claims.length} claim(s)</div>
   <table>
     <thead><tr><th>Claim ID</th><th>Claimant</th><th>Type</th><th>Amount</th><th>Risk</th><th>Score</th><th>Status</th><th>Date</th></tr></thead>
     <tbody>${rows}</tbody>
   </table>
-  <div class="footer">ClaimGuard AI v2.0 — Confidential — ${date}</div>
+  <div class="footer">ClaimLens AI v2.0 — Confidential — ${date}</div>
   <script>window.onload=function(){window.print()}</script>
   </body></html>`;
 

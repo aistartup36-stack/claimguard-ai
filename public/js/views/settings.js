@@ -102,7 +102,7 @@ window.SettingsView = {
 
         <!-- About -->
         <div class="card">
-          <div class="card-header"><h3>About ClaimGuard AI</h3></div>
+          <div class="card-header"><h3>About ClaimLens AI</h3></div>
           <div class="card-body">
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;font-size:13px;color:#64748B">
               <div><strong style="color:#0A1628">Version</strong><br>2.0.0 — Modular Architecture</div>

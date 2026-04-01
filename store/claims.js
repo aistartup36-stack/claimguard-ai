@@ -16,7 +16,7 @@ const SEED_CLAIMS = [
     incidentDescription: 'Rear-ended at a traffic light by an unknown vehicle. The driver fled the scene before I could get their details.',
     damageDescription: 'Rear bumper cracked and displaced, trunk lid bent, both tail lights shattered, spare tyre compartment damaged.',
     witnesses: 'None — hit and run', policeReport: 'RPT-2026-34521', previousClaims: '0',
-    files: [], assignedTo: 'sarah.mitchell@claimguard.com',
+    files: [], assignedTo: 'sarah.mitchell@claimlens.com',
     status: 'approved', riskLevel: 'low', fraudScore: 18,
     analysis: {
       indicators: [],
@@ -38,7 +38,7 @@ const SEED_CLAIMS = [
     incidentDescription: 'A burst pipe in the upstairs bathroom caused flooding throughout the second floor and significant ceiling damage in the first-floor living room.',
     damageDescription: 'Water damage to hardwood floors (approx 400 sq ft), ceiling plaster damage in living room, damaged drywall in bathroom, destroyed bathroom vanity.',
     witnesses: 'Neighbour Jennifer Park assisted in water shutoff', policeReport: 'N/A', previousClaims: '1 (2021 storm damage, $3,200)',
-    files: [], assignedTo: 'david.chen@claimguard.com',
+    files: [], assignedTo: 'david.chen@claimlens.com',
     status: 'approved', riskLevel: 'low', fraudScore: 22,
     analysis: {
       indicators: [{ category: 'Missing Documentation', description: 'No plumber assessment at time of submission', severity: 'low', confidence: 45 }],
@@ -88,7 +88,7 @@ const SEED_CLAIMS = [
     incidentDescription: 'House fire started in the kitchen late at night while I was asleep. Fire spread to the living room and upstairs bedrooms.',
     damageDescription: 'Structural fire damage to kitchen and living room. Smoke damage throughout. Complete loss of furniture, electronics, clothing, jewellery collection, and family heirlooms. Estimated $145,000.',
     witnesses: 'Fire department (Station 12)', policeReport: 'Fire Marshal: FMI-2026-0892', previousClaims: '1 (2025 storm damage, $45,000)',
-    files: [], assignedTo: 'james.whitfield@claimguard.com',
+    files: [], assignedTo: 'james.whitfield@claimlens.com',
     status: 'pending-review', riskLevel: 'high', fraudScore: 79,
     analysis: {
       indicators: [
@@ -116,7 +116,7 @@ const SEED_CLAIMS = [
     incidentDescription: 'Vehicle went off a mountain road into a ravine after swerving to avoid a deer. The vehicle is not recoverable.',
     damageDescription: 'Total loss — 2024 Mercedes-AMG G63. Fell approximately 200 feet into a ravine. Cannot be retrieved for inspection.',
     witnesses: 'None', policeReport: 'N/A — remote location', previousClaims: '3 (2025 total loss $72k; 2024 theft $38k; 2023 collision $24k)',
-    files: [], assignedTo: 'james.whitfield@claimguard.com',
+    files: [], assignedTo: 'james.whitfield@claimlens.com',
     status: 'rejected', riskLevel: 'high', fraudScore: 94,
     analysis: {
       indicators: [

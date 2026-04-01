@@ -1,4 +1,4 @@
-/* ── ClaimGuard AI — Auth ─────────────────────────────────────────────────── */
+/* ── ClaimLens AI — Auth ──────────────────────────────────────────────────── */
 
 window.Auth = (() => {
   const loginScreen = document.getElementById('login-screen');

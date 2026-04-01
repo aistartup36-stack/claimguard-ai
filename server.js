@@ -1,5 +1,5 @@
 /**
- * ClaimGuard AI — Server Entry Point
+ * ClaimLens AI — Server Entry Point
  * Thin orchestrator: loads config, mounts module routers, starts server.
  */
 
@@ -40,7 +40,7 @@ app.listen(PORT, () => {
   const hasKey = !!process.env.ANTHROPIC_API_KEY;
   const hasAuth = !!process.env.ACCESS_PASSWORD;
   console.log('\n╔══════════════════════════════════════════════╗');
-  console.log('║         ClaimGuard AI  v2.0  —  Running       ║');
+  console.log('║         ClaimLens AI   v2.0  —  Running        ║');
   console.log('╚══════════════════════════════════════════════╝');
   console.log(`\n  URL:    http://localhost:${PORT}`);
   console.log(`  AI:     ${hasKey ? '✅ Claude Opus connected' : '⚠️  Demo mode (no ANTHROPIC_API_KEY)'}`);

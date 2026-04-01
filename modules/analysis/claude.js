@@ -40,7 +40,7 @@ async function analyze(claimData, fileBuffers = [], settings = {}) {
     ? `${fileBuffers.length} supporting document(s) are attached. Analyse each for authenticity, consistency with the claim, signs of digital alteration, and additional fraud indicators.`
     : 'No supporting documents were provided with this claim.';
 
-  content.push({ type: 'text', text: `You are ClaimGuard AI, an expert insurance fraud analyst with 20+ years of experience. Analyse this ${claimData.claimType === 'auto' ? 'auto/vehicle' : 'property'} insurance claim for fraud.
+  content.push({ type: 'text', text: `You are ClaimLens AI, an expert insurance fraud analyst with 20+ years of experience. Analyse this ${claimData.claimType === 'auto' ? 'auto/vehicle' : 'property'} insurance claim for fraud.
 
 CLAIM DETAILS:
 • Type: ${claimData.claimType === 'auto' ? 'Auto/Vehicle Insurance' : 'Property Insurance'}

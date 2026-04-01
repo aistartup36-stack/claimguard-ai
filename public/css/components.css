@@ -1,4 +1,4 @@
-/* ── ClaimGuard AI — UI Components ───────────────────────────────────────── */
+/* ── ClaimLens AI — UI Components ────────────────────────────────────────── */
 
 /* ── Buttons ─────────────────────────────────────────────────────────────── */
 .btn { display: inline-flex; align-items: center; gap: 7px; padding: 9px 16px; border-radius: var(--radius); font-size: 14px; font-weight: 500; cursor: pointer; border: none; transition: all .15s; text-decoration: none; white-space: nowrap; font-family: inherit; }
