@@ -19,12 +19,20 @@ function daysBetween(d1, d2) {
  * @param {Object} claimData   — parsed claim form fields
  * @param {Array}  fileBuffers — [{ buffer: Buffer, mimetype: string, originalname: string }]
  * @param {Object} settings    — { lowRiskThreshold, highRiskThreshold }
+ * @param {String} lang        — 'en' | 'fr' (controls the language of free-text output)
  * @returns {Object}           — analysis result
  */
-async function analyze(claimData, fileBuffers = [], settings = {}) {
+async function analyze(claimData, fileBuffers = [], settings = {}, lang = 'en') {
   const { lowRiskThreshold = 30, highRiskThreshold = 65 } = settings;
   const delay = daysBetween(claimData.incidentDate, claimData.reportDate);
   const content = [];
+
+  // Language directive — controls ALL free-text output (summary, descriptions,
+  // key_concerns, positive_factors, recommendation, indicator categories + descriptions).
+  // Enum fields (risk_level, severity) MUST stay in English because downstream code branches on them.
+  const langBlock = lang === 'fr'
+    ? `LANGUE DE RÉPONSE : Répondez ENTIÈREMENT EN FRANÇAIS. Tout le texte libre (résumé, descriptions d'indicateurs, catégories, préoccupations clés, facteurs positifs, recommandation) doit être rédigé en français professionnel, adapté au secteur de l'assurance française. IMPORTANT : les valeurs des champs « risk_level » et « severity » DOIVENT rester en anglais (low / medium / high) car elles sont utilisées par le code ; elles seront traduites dans l'interface. Utilisez le symbole £ tel quel pour les montants.\n\n`
+    : '';
 
   // Attach files (images as vision, PDFs as document blocks)
   for (const f of fileBuffers) {
@@ -40,7 +48,7 @@ async function analyze(claimData, fileBuffers = [], settings = {}) {
     ? `${fileBuffers.length} supporting document(s) are attached. Analyse each for authenticity, consistency with the claim, signs of digital alteration, and additional fraud indicators.`
     : 'No supporting documents were provided with this claim.';
 
-  content.push({ type: 'text', text: `You are ClaimLens AI, an expert insurance fraud analyst with 20+ years of experience. Analyse this ${claimData.claimType === 'auto' ? 'auto/vehicle' : 'property'} insurance claim for fraud.
+  content.push({ type: 'text', text: `${langBlock}You are ClaimLens AI, an expert insurance fraud analyst with 20+ years of experience. Analyse this ${claimData.claimType === 'auto' ? 'auto/vehicle' : 'property'} insurance claim for fraud.
 
 CLAIM DETAILS:
 • Type: ${claimData.claimType === 'auto' ? 'Auto/Vehicle Insurance' : 'Property Insurance'}
@@ -67,12 +75,12 @@ Analyse for: delayed/inconsistent timelines, inflated estimates, vague/scripted 
 Respond with ONLY raw valid JSON (no markdown, no code fences):
 {
   "fraud_score": <integer 0-100>,
-  "risk_level": "<low|medium|high>",
+  "risk_level": "<low|medium|high — MUST be one of these English enums>",
   "indicators": [
     {
-      "category": "<Inconsistent Timeline|Inflated Estimate|Missing Documentation|Suspicious Description|Pattern Match|Document Anomaly|Geographic Inconsistency|Other>",
+      "category": "<short category label — in the response language>",
       "description": "<specific, actionable description>",
-      "severity": "<low|medium|high>",
+      "severity": "<low|medium|high — MUST be one of these English enums>",
       "confidence": <integer 0-100>
     }
   ],

@@ -257,7 +257,8 @@ window.SubmitView = {
       damageDescription: form.damageDescription.value.trim(),
       witnesses: form.witnesses.value.trim(),
       policeReport: form.policeReport.value.trim(),
-      previousClaims: form.previousClaims.value.trim()
+      previousClaims: form.previousClaims.value.trim(),
+      lang: (window.i18n ? window.i18n.getLang() : 'en')
     };
     fd.append('claimData', JSON.stringify(claimData));
     this._files.forEach(f => fd.append('documents', f));
