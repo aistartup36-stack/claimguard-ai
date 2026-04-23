@@ -7,18 +7,20 @@ window.HistoryView = {
   _filters: {},
 
   async render() {
-    document.getElementById('content-area').innerHTML = `<div style="color:#94A3B8;padding:40px;text-align:center">Loading...</div>`;
+    const T = (k, v) => (window.i18n ? window.i18n.t(k, v) : k);
+    document.getElementById('content-area').innerHTML = `<div style="color:#94A3B8;padding:40px;text-align:center">${T('generic.loading')}</div>`;
     this._page = 1;
     this._filters = {};
     try {
       this._claims = await API.getReports();
       this._renderPage();
     } catch(e) {
-      document.getElementById('content-area').innerHTML = `<div style="color:#EF4444;padding:20px">Error: ${e.message}</div>`;
+      document.getElementById('content-area').innerHTML = `<div style="color:#EF4444;padding:20px">${T('generic.error', { msg: e.message })}</div>`;
     }
   },
 
   _renderPage() {
+    const T = (k, v) => (window.i18n ? window.i18n.t(k, v) : k);
     const filtered = this._applyFilters();
     const total = filtered.length;
     const pages = Math.max(1, Math.ceil(total / this._perPage));
@@ -28,15 +30,15 @@ window.HistoryView = {
     document.getElementById('content-area').innerHTML = `
       <div class="card">
         <div class="card-header">
-          <h3>Claims History <span style="font-weight:400;color:#64748B">(${total})</span></h3>
+          <h3>${T('history.title')} <span style="font-weight:400;color:#64748B">(${total})</span></h3>
           <div style="display:flex;gap:8px">
             <a class="btn btn-sm btn-ghost" href="${API.exportUrl('csv', this._filters)}" download>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-              CSV
+              ${T('history.export.csv')}
             </a>
             <a class="btn btn-sm btn-ghost" href="${API.exportUrl('pdf', this._filters)}" target="_blank">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-              PDF
+              ${T('history.export.pdf')}
             </a>
           </div>
         </div>
@@ -44,39 +46,39 @@ window.HistoryView = {
         <!-- Filters -->
         <div style="padding:14px 24px;border-bottom:1px solid #E2E8F0;background:#F8FAFC">
           <div class="filters-bar">
-            <input class="search-input" placeholder="Search name, ID, policy…" value="${this._filters.search || ''}" oninput="HistoryView._setFilter('search', this.value)">
+            <input class="search-input" placeholder="${T('history.search')}" value="${this._filters.search || ''}" oninput="HistoryView._setFilter('search', this.value)">
             <select class="filter-select" onchange="HistoryView._setFilter('riskLevel', this.value)">
-              <option value="">All Risk Levels</option>
-              <option value="low" ${this._filters.riskLevel==='low'?'selected':''}>Low</option>
-              <option value="medium" ${this._filters.riskLevel==='medium'?'selected':''}>Medium</option>
-              <option value="high" ${this._filters.riskLevel==='high'?'selected':''}>High</option>
+              <option value="">${T('history.filter.allRisk')}</option>
+              <option value="low" ${this._filters.riskLevel==='low'?'selected':''}>${T('risk.low')}</option>
+              <option value="medium" ${this._filters.riskLevel==='medium'?'selected':''}>${T('risk.medium')}</option>
+              <option value="high" ${this._filters.riskLevel==='high'?'selected':''}>${T('risk.high')}</option>
             </select>
             <select class="filter-select" onchange="HistoryView._setFilter('status', this.value)">
-              <option value="">All Statuses</option>
-              <option value="approved" ${this._filters.status==='approved'?'selected':''}>Approved</option>
-              <option value="rejected" ${this._filters.status==='rejected'?'selected':''}>Rejected</option>
-              <option value="pending-review" ${this._filters.status==='pending-review'?'selected':''}>Pending Review</option>
-              <option value="low-risk" ${this._filters.status==='low-risk'?'selected':''}>Low Risk</option>
-              <option value="info-requested" ${this._filters.status==='info-requested'?'selected':''}>Info Requested</option>
+              <option value="">${T('history.filter.allStatus')}</option>
+              <option value="approved" ${this._filters.status==='approved'?'selected':''}>${T('status.approved')}</option>
+              <option value="rejected" ${this._filters.status==='rejected'?'selected':''}>${T('status.rejected')}</option>
+              <option value="pending-review" ${this._filters.status==='pending-review'?'selected':''}>${T('status.pending-review')}</option>
+              <option value="low-risk" ${this._filters.status==='low-risk'?'selected':''}>${T('status.low-risk')}</option>
+              <option value="info-requested" ${this._filters.status==='info-requested'?'selected':''}>${T('status.info-requested')}</option>
             </select>
             <select class="filter-select" onchange="HistoryView._setFilter('claimType', this.value)">
-              <option value="">All Types</option>
-              <option value="auto" ${this._filters.claimType==='auto'?'selected':''}>Auto</option>
-              <option value="property" ${this._filters.claimType==='property'?'selected':''}>Property</option>
+              <option value="">${T('history.filter.allTypes')}</option>
+              <option value="auto" ${this._filters.claimType==='auto'?'selected':''}>${T('history.type.auto')}</option>
+              <option value="property" ${this._filters.claimType==='property'?'selected':''}>${T('history.type.property')}</option>
             </select>
-            <input class="filter-select" type="date" title="From date" value="${this._filters.startDate || ''}" onchange="HistoryView._setFilter('startDate', this.value)" style="width:140px">
-            <input class="filter-select" type="date" title="To date" value="${this._filters.endDate || ''}" onchange="HistoryView._setFilter('endDate', this.value)" style="width:140px">
-            ${Object.values(this._filters).some(v => v) ? `<button class="btn btn-sm btn-ghost" onclick="HistoryView._clearFilters()">Clear</button>` : ''}
+            <input class="filter-select" type="date" title="${T('history.date.from')}" value="${this._filters.startDate || ''}" onchange="HistoryView._setFilter('startDate', this.value)" style="width:140px">
+            <input class="filter-select" type="date" title="${T('history.date.to')}" value="${this._filters.endDate || ''}" onchange="HistoryView._setFilter('endDate', this.value)" style="width:140px">
+            ${Object.values(this._filters).some(v => v) ? `<button class="btn btn-sm btn-ghost" onclick="HistoryView._clearFilters()">${T('history.clear')}</button>` : ''}
           </div>
         </div>
 
         <!-- Table -->
         ${slice.length === 0
-          ? `<div class="empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg><h3>No claims found</h3><p>Try adjusting your filters.</p></div>`
+          ? `<div class="empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg><h3>${T('history.empty.title')}</h3><p>${T('history.empty.body')}</p></div>`
           : `<table class="data-table">
             <thead><tr>
-              <th>Claim ID</th><th>Claimant</th><th>Type</th><th>Policy</th>
-              <th>Amount</th><th>Incident Date</th><th>Flags</th><th>Risk</th><th>Status</th><th>Submitted</th>
+              <th>${T('history.col.id')}</th><th>${T('history.col.claimant')}</th><th>${T('history.col.type')}</th><th>${T('history.col.policy')}</th>
+              <th>${T('history.col.amount')}</th><th>${T('history.col.incident')}</th><th>${T('history.col.flags')}</th><th>${T('history.col.risk')}</th><th>${T('history.col.status')}</th><th>${T('history.col.submitted')}</th>
             </tr></thead>
             <tbody>
               ${slice.map(c => `<tr onclick="App.viewClaim('${c.id}')">

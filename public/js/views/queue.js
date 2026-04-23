@@ -4,8 +4,9 @@ window.QueueView = {
   _settings: null,
 
   async render() {
+    const T = (k, v) => (window.i18n ? window.i18n.t(k, v) : k);
     const area = document.getElementById('content-area');
-    area.innerHTML = `<div style="color:#94A3B8;padding:40px;text-align:center">Loading queue...</div>`;
+    area.innerHTML = `<div style="color:#94A3B8;padding:40px;text-align:center">${T('queue.loading')}</div>`;
     try {
       const [queue, settings] = await Promise.all([API.getQueue(), API.getSettings()]);
       this._settings = settings;
@@ -14,7 +15,7 @@ window.QueueView = {
       if (queue.length === 0) {
         area.innerHTML = `<div class="empty-state">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="20 6 9 17 4 12"/></svg>
-          <h3>Queue is Clear</h3><p>No claims are currently awaiting human review.</p>
+          <h3>${T('queue.empty.title')}</h3><p>${T('queue.empty.body')}</p>
         </div>`;
         return;
       }
@@ -25,18 +26,20 @@ window.QueueView = {
       area.innerHTML = `
         <div style="max-width:900px">
           <div style="display:flex;align-items:center;gap:12px;margin-bottom:22px;flex-wrap:wrap">
-            <div style="flex:1;font-size:13px;color:#64748B">${queue.length} claim${queue.length !== 1 ? 's' : ''} awaiting review · Sorted by fraud score</div>
-            ${high ? Badges.risk('high') + ` <span style="font-size:12px;color:#64748B">${high} High</span>` : ''}
-            ${med  ? Badges.risk('medium') + ` <span style="font-size:12px;color:#64748B">${med} Medium</span>` : ''}
+            <div style="flex:1;font-size:13px;color:#64748B">${queue.length === 1 ? T('queue.summary.one') : T('queue.summary', { n: queue.length })}</div>
+            ${high ? Badges.risk('high') + ` <span style="font-size:12px;color:#64748B">${T('queue.filter.high', { n: high })}</span>` : ''}
+            ${med  ? Badges.risk('medium') + ` <span style="font-size:12px;color:#64748B">${T('queue.filter.medium', { n: med })}</span>` : ''}
           </div>
           ${queue.map(c => this._card(c, settings.reviewers)).join('')}
         </div>`;
     } catch(e) {
-      area.innerHTML = `<div style="color:#EF4444;padding:20px">Error: ${e.message}</div>`;
+      const T = (k, v) => (window.i18n ? window.i18n.t(k, v) : k);
+      area.innerHTML = `<div style="color:#EF4444;padding:20px">${T('generic.error', { msg: e.message })}</div>`;
     }
   },
 
   _card(c, reviewers) {
+    const T = (k, v) => (window.i18n ? window.i18n.t(k, v) : k);
     const indicators = c.analysis?.indicators || [];
     const topIndicator = indicators.sort((a,b) => (b.confidence||0)-(a.confidence||0))[0];
     return `
@@ -53,37 +56,38 @@ window.QueueView = {
           </div>
           <div style="text-align:right;flex-shrink:0;padding-left:16px">
             <div style="font-size:32px;font-weight:800;letter-spacing:-1px" class="score-${c.riskLevel}">${c.fraudScore}</div>
-            <div style="font-size:10px;color:#94A3B8;margin-top:1px">FRAUD SCORE</div>
+            <div style="font-size:10px;color:#94A3B8;margin-top:1px">${T('queue.card.fraudScore')}</div>
             <div style="margin-top:6px">${Badges.risk(c.riskLevel)}</div>
           </div>
         </div>
         <div class="queue-card-footer">
-          <div class="queue-meta"><div class="queue-meta-label">Claimed</div><div class="queue-meta-value">${Utils.fmt$(c.claimedAmount)}</div></div>
-          <div class="queue-meta"><div class="queue-meta-label">Incident</div><div class="queue-meta-value">${Utils.fmtDate(c.incidentDate)}</div></div>
-          <div class="queue-meta"><div class="queue-meta-label">Status</div><div class="queue-meta-value">${Badges.status(c.status)}</div></div>
+          <div class="queue-meta"><div class="queue-meta-label">${T('queue.meta.claimed')}</div><div class="queue-meta-value">${Utils.fmt$(c.claimedAmount)}</div></div>
+          <div class="queue-meta"><div class="queue-meta-label">${T('queue.meta.incident')}</div><div class="queue-meta-value">${Utils.fmtDate(c.incidentDate)}</div></div>
+          <div class="queue-meta"><div class="queue-meta-label">${T('queue.meta.status')}</div><div class="queue-meta-value">${Badges.status(c.status)}</div></div>
           <div class="queue-meta" style="margin-left:auto">
-            <div class="queue-meta-label">Assign to</div>
+            <div class="queue-meta-label">${T('queue.meta.assign')}</div>
             <div style="display:flex;gap:6px;align-items:center">
               <select class="filter-select" style="font-size:12px;padding:4px 8px" onchange="QueueView.assign('${c.id}', this.value)">
-                <option value="">Unassigned</option>
+                <option value="">${T('queue.assign.unassigned')}</option>
                 ${reviewers.map(r => `<option value="${r}" ${c.assignedTo === r ? 'selected' : ''}>${r.split('@')[0]}</option>`).join('')}
               </select>
             </div>
           </div>
           <div class="queue-meta">
             <div class="queue-meta-label">&nbsp;</div>
-            <button class="btn btn-primary btn-sm" onclick="App.viewClaim('${c.id}')">Review →</button>
+            <button class="btn btn-primary btn-sm" onclick="App.viewClaim('${c.id}')">${T('queue.btn.review')}</button>
           </div>
         </div>
       </div>`;
   },
 
   async assign(id, email) {
+    const T = (k, v) => (window.i18n ? window.i18n.t(k, v) : k);
     try {
       await API.assignClaim(id, email || null);
-      Toast.show(email ? `Assigned to ${email.split('@')[0]}` : 'Unassigned', 'success');
+      Toast.show(email ? T('queue.toast.assigned', { name: email.split('@')[0] }) : T('queue.toast.unassigned'), 'success');
     } catch(e) {
-      Toast.show(`Assignment failed: ${e.message}`, 'error');
+      Toast.show(T('queue.toast.assignFail', { msg: e.message }), 'error');
     }
   }
 };

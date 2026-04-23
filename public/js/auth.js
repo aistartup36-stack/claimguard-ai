@@ -52,11 +52,13 @@ window.Auth = (() => {
     if (loginUsername) loginUsername.focus();
   }
 
+  const tr = (k) => (window.i18n ? window.i18n.t(k) : k);
+
   loginForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     loginError.textContent = '';
     loginBtn.disabled = true;
-    loginBtn.textContent = 'Signing in…';
+    loginBtn.textContent = tr('login.submitting');
 
     try {
       const res = await fetch('/api/auth/login', {
@@ -83,7 +85,7 @@ window.Auth = (() => {
           }
         }, 300);
       } else {
-        loginError.textContent = data.error || 'Invalid username or password.';
+        loginError.textContent = data.error || tr('login.error.invalid');
         loginPassword.value = '';
         loginPassword.focus();
         // Shake animation
@@ -91,10 +93,12 @@ window.Auth = (() => {
         setTimeout(() => loginForm.classList.remove('login-shake'), 500);
       }
     } catch {
-      loginError.textContent = 'Unable to reach server. Please try again.';
+      loginError.textContent = tr('login.error.server');
     } finally {
       loginBtn.disabled = false;
-      loginBtn.textContent = 'Sign In';
+      // The default text comes from the data-i18n attribute on the button;
+      // reset by letting i18n.apply() run or set textContent directly.
+      loginBtn.textContent = tr('login.submit');
     }
   });
 
@@ -107,9 +111,9 @@ window.Auth = (() => {
         <div style="width:28px;height:28px;border-radius:50%;background:#1E6FD9;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:white;flex-shrink:0">${user.displayName[0]}</div>
         <div style="flex:1;min-width:0">
           <div style="font-weight:600;color:#E2E8F0;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${user.displayName}</div>
-          <div style="font-size:10px;color:#64748B">${user.role === 'admin' ? 'Administrator' : 'User'}</div>
+          <div style="font-size:10px;color:#64748B" data-i18n="${user.role === 'admin' ? 'app.role.admin' : 'app.role.user'}">${user.role === 'admin' ? tr('app.role.admin') : tr('app.role.user')}</div>
         </div>
-        <button onclick="Auth.logout()" title="Sign out" style="background:none;border:1px solid rgba(255,255,255,.1);border-radius:6px;padding:4px 6px;cursor:pointer;color:#94A3B8;display:flex;align-items:center">
+        <button onclick="Auth.logout()" data-i18n-title="app.sidebar.signout" title="${tr('app.sidebar.signout')}" style="background:none;border:1px solid rgba(255,255,255,.1);border-radius:6px;padding:4px 6px;cursor:pointer;color:#94A3B8;display:flex;align-items:center">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
         </button>`;
     }
@@ -120,6 +124,14 @@ window.Auth = (() => {
 
   // Run auth check on page load
   checkAuth();
+
+  // Re-apply translations to elements we just injected when the language changes
+  if (window.i18n) {
+    window.i18n.onChange(() => {
+      if (_user) _populateSidebar();
+      if (loginBtn && !loginBtn.disabled) loginBtn.textContent = tr('login.submit');
+    });
+  }
 
   return { ready, checkAuth, showLogin, logout, getUser, _populateSidebar };
 })();
