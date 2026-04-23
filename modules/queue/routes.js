@@ -57,7 +57,9 @@ router.put('/claims/:id/assign', (req, res) => {
     timestamp: new Date().toISOString(),
     actor: 'System',
     action: 'assigned',
-    notes: assignedTo ? `Assigned to ${assignedTo}` : 'Unassigned'
+    notes: assignedTo
+      ? { key: 'audit.note.assigned', vars: { name: assignedTo } }
+      : { key: 'audit.note.unassigned' }
   };
 
   const updated = claimsStore.update(req.params.id, {

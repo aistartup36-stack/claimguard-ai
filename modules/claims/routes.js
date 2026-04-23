@@ -71,7 +71,12 @@ router.post('/claims', upload.array('documents', 5), async (req, res) => {
       analysis: null,
       aiImageCheck: null,
       submittedAt: new Date().toISOString(),
-      auditTrail: [{ timestamp: new Date().toISOString(), actor: 'System', action: 'submitted', notes: `${files.length} document(s) attached` }]
+      auditTrail: [{
+        timestamp: new Date().toISOString(),
+        actor: 'System',
+        action: 'submitted',
+        notes: { key: 'audit.note.submitted', vars: { count: files.length } }
+      }]
     };
 
     // Run fraud analysis + AI image detection in parallel where possible.
@@ -97,7 +102,12 @@ router.post('/claims', upload.array('documents', 5), async (req, res) => {
         claim.status = 'low-risk';
       } else if (escalationEnabled) {
         claim.status = 'pending-review';
-        claim.auditTrail.push({ timestamp: new Date().toISOString(), actor: 'System', action: 'escalated', notes: `${result.risk_level === 'high' ? 'High' : 'Medium'} risk (score ${result.fraud_score}) — auto-escalated to review queue` });
+        claim.auditTrail.push({
+          timestamp: new Date().toISOString(),
+          actor: 'System',
+          action: 'escalated',
+          notes: { key: 'audit.note.escalated', vars: { level: result.risk_level, score: result.fraud_score } }
+        });
       } else {
         claim.status = 'low-risk'; // escalation disabled
       }
@@ -122,7 +132,7 @@ router.post('/claims', upload.array('documents', 5), async (req, res) => {
             timestamp: new Date().toISOString(),
             actor: 'System',
             action: 'flagged',
-            notes: `AI-generated image suspected: ${summary.worstImage} (${Math.round((summary.maxScore || 0) * 100)}% confidence)`
+            notes: { key: 'audit.note.flaggedAi', vars: { name: summary.worstImage, pct: Math.round((summary.maxScore || 0) * 100) } }
           });
         }
       }

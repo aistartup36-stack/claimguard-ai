@@ -3,6 +3,28 @@
 // Short alias — falls back to the raw key if i18n hasn't loaded for any reason.
 const T = (k, vars) => (window.i18n ? window.i18n.t(k, vars) : k);
 
+// Audit trail helpers — translate when keys are present, fall back to raw text
+// for legacy/seed entries that were stored as plain strings.
+const SYSTEM_ACTORS = new Set(['System', 'Claimant', 'Reviewer']);
+function _auditAction(action) {
+  return action ? T('audit.action.' + action) : '';
+}
+function _auditActor(actor) {
+  if (!actor) return '';
+  return SYSTEM_ACTORS.has(actor) ? T('audit.actor.' + actor) : actor;
+}
+function _auditNotes(notes) {
+  if (notes == null) return '';
+  if (typeof notes === 'string') return notes;
+  if (typeof notes === 'object' && notes.key) {
+    // Localise any nested risk-level vars before interpolating
+    const vars = { ...(notes.vars || {}) };
+    if (vars.level) vars.level = T('risk.' + vars.level);
+    return T(notes.key, vars);
+  }
+  return String(notes);
+}
+
 // ── AI image detection card (shared between result + detail views) ─────────
 function renderAiImageCheck(check) {
   if (!check || !check.summary) return '';
@@ -345,15 +367,18 @@ window.App = {
         <div class="card" style="margin-bottom:22px">
           <div class="card-header"><h3>${T('detail.audit.title')}</h3></div>
           <div class="reviewer-panel">
-            ${claim.auditTrail.map(e => `
+            ${claim.auditTrail.map(e => {
+              const noteText = _auditNotes(e.notes);
+              return `
               <div class="audit-entry">
                 <div class="audit-dot ${e.action}"></div>
                 <div style="flex:1">
-                  <div style="font-size:13px;font-weight:600;color:#E2E8F0;text-transform:capitalize">${e.action}</div>
-                  <div style="font-size:12px;color:#94A3B8">${e.actor} · ${Utils.fmtDateTime(e.timestamp)}</div>
-                  ${e.notes ? `<div style="font-size:12px;color:#CBD5E1;margin-top:3px">${e.notes}</div>` : ''}
+                  <div style="font-size:13px;font-weight:600;color:#E2E8F0">${_auditAction(e.action)}</div>
+                  <div style="font-size:12px;color:#94A3B8">${_auditActor(e.actor)} · ${Utils.fmtDateTime(e.timestamp)}</div>
+                  ${noteText ? `<div style="font-size:12px;color:#CBD5E1;margin-top:3px">${noteText}</div>` : ''}
                 </div>
-              </div>`).join('')}
+              </div>`;
+            }).join('')}
           </div>
         </div>` : ''}
 

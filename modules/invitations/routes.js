@@ -114,7 +114,7 @@ router.post('/public/claims/:token', upload.array('documents', 5), async (req, r
         timestamp: new Date().toISOString(),
         actor: 'Claimant',
         action: 'submitted',
-        notes: `Submitted via public link · ${files.length} document(s) attached`
+        notes: { key: 'audit.note.submittedPublic', vars: { count: files.length } }
       }]
     };
 
@@ -144,7 +144,7 @@ router.post('/public/claims/:token', upload.array('documents', 5), async (req, r
           timestamp: new Date().toISOString(),
           actor: 'System',
           action: 'escalated',
-          notes: `${result.risk_level === 'high' ? 'High' : 'Medium'} risk (score ${result.fraud_score}) — auto-escalated to review queue`
+          notes: { key: 'audit.note.escalated', vars: { level: result.risk_level, score: result.fraud_score } }
         });
       } else {
         claim.status = 'low-risk';
@@ -168,7 +168,7 @@ router.post('/public/claims/:token', upload.array('documents', 5), async (req, r
             timestamp: new Date().toISOString(),
             actor: 'System',
             action: 'flagged',
-            notes: `AI-generated image suspected: ${summary.worstImage} (${Math.round((summary.maxScore || 0) * 100)}% confidence)`
+            notes: { key: 'audit.note.flaggedAi', vars: { name: summary.worstImage, pct: Math.round((summary.maxScore || 0) * 100) } }
           });
         }
       }

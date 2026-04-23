@@ -359,6 +359,24 @@ window.i18n = (() => {
       'generic.loading':     'Loading...',
       'generic.error':       'Error: {msg}',
 
+      // ─── Audit trail entries ────────────────────────────────────────────
+      'audit.action.submitted':     'Submitted',
+      'audit.action.escalated':     'Escalated',
+      'audit.action.flagged':       'Flagged',
+      'audit.action.approved':      'Approved',
+      'audit.action.rejected':      'Rejected',
+      'audit.action.request-info':  'Info Requested',
+      'audit.action.assigned':      'Assigned',
+      'audit.actor.System':         'System',
+      'audit.actor.Claimant':       'Claimant',
+      'audit.actor.Reviewer':       'Reviewer',
+      'audit.note.submitted':       '{count} document(s) attached',
+      'audit.note.submittedPublic': 'Submitted via public link · {count} document(s) attached',
+      'audit.note.escalated':       '{level} risk (score {score}) — auto-escalated to review queue',
+      'audit.note.flaggedAi':       'AI-generated image suspected: {name} ({pct}% confidence)',
+      'audit.note.assigned':        'Assigned to {name}',
+      'audit.note.unassigned':      'Unassigned',
+
       // ─── Invitations (broker side) ──────────────────────────────────────
       'app.nav.invitations':        'Send Link',
       'page.invitations.title':     'Send Claim Link',
@@ -771,6 +789,24 @@ window.i18n = (() => {
 
       'generic.loading':     'Chargement…',
       'generic.error':       'Erreur : {msg}',
+
+      // ─── Piste d'audit ──────────────────────────────────────────────────
+      'audit.action.submitted':     'Soumis',
+      'audit.action.escalated':     'Escaladé',
+      'audit.action.flagged':       'Signalé',
+      'audit.action.approved':      'Approuvé',
+      'audit.action.rejected':      'Rejeté',
+      'audit.action.request-info':  'Infos demandées',
+      'audit.action.assigned':      'Assigné',
+      'audit.actor.System':         'Système',
+      'audit.actor.Claimant':       'Demandeur',
+      'audit.actor.Reviewer':       'Examinateur',
+      'audit.note.submitted':       '{count} document(s) joint(s)',
+      'audit.note.submittedPublic': 'Soumis via lien public · {count} document(s) joint(s)',
+      'audit.note.escalated':       'Risque {level} (score {score}) — escaladé automatiquement vers la file d\'examen',
+      'audit.note.flaggedAi':       'Image générée par IA suspectée : {name} ({pct}% de confiance)',
+      'audit.note.assigned':        'Assigné à {name}',
+      'audit.note.unassigned':      'Non assigné',
 
       // ─── Invitations (côté courtier) ────────────────────────────────────
       'app.nav.invitations':        'Envoyer un lien',
