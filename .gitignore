@@ -2,5 +2,6 @@ node_modules/
 .env
 data/claims.json
 data/settings.json
+data/invitations.json
 .DS_Store
 .claude/

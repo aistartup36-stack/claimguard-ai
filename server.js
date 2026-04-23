@@ -18,6 +18,12 @@ app.get('/login', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'app.html'));
 });
 
+// Public claimant-link landing page (no auth). The token is validated client-side
+// against /api/public/invitations/:token.
+app.get('/claim/:token', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'claim.html'));
+});
+
 // Serve frontend
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -33,6 +39,7 @@ app.use('/api', require('./modules/claims/routes'));      // Module 2 — Claim 
 app.use('/api', require('./modules/queue/routes'));       // Module 4 — Review Queue
 app.use('/api', require('./modules/reports/routes'));     // Module 5 — History & Reports
 app.use('/api', require('./modules/settings/routes'));    // Module 6 — Settings
+app.use('/api', require('./modules/invitations/routes')); // Module 7 — Claimant Invitations
 
 // Global error handler
 app.use((err, req, res, next) => {

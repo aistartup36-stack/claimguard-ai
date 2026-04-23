@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en" data-i18n-title="public.meta.title">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Submit Your Claim — ClaimLens AI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --navy-950: #060D1A; --navy-900: #0A1628; --navy-800: #0D1F3C;
+      --blue-500: #1E6FD9; --blue-600: #1E5FC4; --blue-700: #1D4ED8;
+      --blue-300: #60A5FA; --blue-200: #93C5FD;
+      --white: #FFFFFF; --gray-50: #F8FAFC; --gray-100: #F1F5F9; --gray-200: #E2E8F0;
+      --gray-400: #94A3B8; --gray-500: #64748B; --gray-600: #475569; --gray-700: #334155;
+      --green-50: #D1FAE5; --green-700: #065F46; --green-600: #10B981;
+      --red-50: #FEE2E2; --red-700: #991B1B;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: linear-gradient(135deg, var(--navy-950) 0%, var(--navy-800) 100%);
+      min-height: 100vh; color: var(--gray-700);
+      padding: 40px 20px;
+    }
+    .wrap { max-width: 720px; margin: 0 auto; }
+    .brand {
+      display: flex; align-items: center; gap: 12px; margin-bottom: 24px; justify-content: center;
+    }
+    .brand-icon {
+      width: 40px; height: 40px; border-radius: 10px;
+      background: linear-gradient(135deg, var(--blue-500), var(--blue-300));
+      display: flex; align-items: center; justify-content: center;
+    }
+    .brand-name { font-size: 20px; font-weight: 700; color: var(--white); letter-spacing: -.3px; }
+    .card {
+      background: var(--white); border-radius: 16px; padding: 32px;
+      box-shadow: 0 20px 60px rgba(0,0,0,.25);
+    }
+    .card h1 {
+      font-size: 24px; font-weight: 800; color: var(--navy-900);
+      letter-spacing: -.5px; margin-bottom: 8px;
+    }
+    .card-sub { font-size: 14px; color: var(--gray-500); margin-bottom: 24px; line-height: 1.6; }
+
+    .prefilled {
+      display: flex; gap: 10px; align-items: center;
+      padding: 12px 14px; background: var(--gray-50); border: 1px solid var(--gray-200);
+      border-radius: 10px; margin-bottom: 20px; font-size: 13px; color: var(--gray-600);
+    }
+    .prefilled-label { font-weight: 600; color: var(--navy-900); }
+
+    .form-section { margin-bottom: 22px; }
+    .form-section-title { font-size: 13px; font-weight: 700; color: var(--navy-900); margin-bottom: 4px; text-transform: uppercase; letter-spacing: .4px; }
+    .form-section-desc { font-size: 13px; color: var(--gray-500); margin-bottom: 12px; }
+    .form-group { margin-bottom: 14px; }
+    .form-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .form-label { display: block; font-size: 13px; font-weight: 600; color: var(--gray-700); margin-bottom: 6px; }
+    .form-input, .form-textarea, .form-select {
+      width: 100%; padding: 10px 12px; font-size: 14px; font-family: inherit;
+      border: 1px solid var(--gray-200); border-radius: 8px; color: var(--navy-900);
+      background: var(--white); transition: border-color .15s, box-shadow .15s;
+    }
+    .form-input:focus, .form-textarea:focus, .form-select:focus {
+      outline: none; border-color: var(--blue-500); box-shadow: 0 0 0 3px rgba(30,111,217,.12);
+    }
+    .form-textarea { resize: vertical; min-height: 100px; }
+    .req { color: #EF4444; font-weight: 700; margin-left: 2px; }
+
+    .type-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .type-card {
+      padding: 16px; border: 2px solid var(--gray-200); border-radius: 10px;
+      text-align: center; cursor: pointer; transition: all .15s;
+      background: var(--white);
+    }
+    .type-card.active { border-color: var(--blue-500); background: rgba(30,111,217,.05); }
+    .type-card-title { font-weight: 600; color: var(--navy-900); font-size: 14px; }
+    .type-card-sub { font-size: 12px; color: var(--gray-500); margin-top: 2px; }
+
+    .file-upload-area {
+      border: 2px dashed var(--gray-200); border-radius: 10px; padding: 28px;
+      text-align: center; cursor: pointer; transition: border-color .15s, background .15s;
+    }
+    .file-upload-area:hover, .file-upload-area.drag-over { border-color: var(--blue-500); background: rgba(30,111,217,.03); }
+    .file-upload-area h4 { font-size: 14px; font-weight: 600; color: var(--navy-900); margin-bottom: 4px; }
+    .file-upload-area p { font-size: 12px; color: var(--gray-500); }
+    .file-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+    .file-tag {
+      display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px;
+      background: var(--gray-100); border-radius: 6px; font-size: 12px; color: var(--gray-700);
+    }
+    .file-tag button { border: none; background: none; cursor: pointer; color: var(--gray-500); font-size: 14px; }
+
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      padding: 12px 24px; font-size: 14px; font-weight: 600; font-family: inherit;
+      border-radius: 8px; cursor: pointer; border: none; transition: all .15s;
+    }
+    .btn-primary { background: var(--blue-500); color: var(--white); }
+    .btn-primary:hover { background: var(--blue-700); }
+    .btn-primary:disabled { opacity: .5; cursor: not-allowed; }
+    .btn-block { width: 100%; }
+
+    .divider { height: 1px; background: var(--gray-200); margin: 22px 0; }
+
+    .error-screen, .success-screen {
+      background: var(--white); border-radius: 16px; padding: 48px 36px; text-align: center;
+      box-shadow: 0 20px 60px rgba(0,0,0,.25);
+    }
+    .error-icon, .success-icon {
+      width: 64px; height: 64px; border-radius: 50%; margin: 0 auto 20px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .error-icon { background: var(--red-50); color: var(--red-700); }
+    .success-icon { background: var(--green-50); color: var(--green-700); }
+    .error-screen h1, .success-screen h1 {
+      font-size: 24px; font-weight: 800; color: var(--navy-900); margin-bottom: 10px; letter-spacing: -.5px;
+    }
+    .error-screen p, .success-screen p { font-size: 14px; color: var(--gray-500); line-height: 1.7; }
+    .reference-box {
+      display: inline-block; margin-top: 20px; padding: 14px 22px;
+      background: var(--gray-50); border: 1px solid var(--gray-200); border-radius: 10px;
+    }
+    .reference-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .6px; color: var(--gray-500); margin-bottom: 4px; }
+    .reference-value { font-family: monospace; font-size: 18px; font-weight: 700; color: var(--navy-900); letter-spacing: .5px; }
+
+    .lang-switcher {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 3px 6px; border-radius: 8px;
+      background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.15);
+    }
+    .lang-switcher .lang-btn {
+      background: transparent; border: none; cursor: pointer; font-family: inherit;
+      font-size: 11px; font-weight: 700; padding: 3px 7px; border-radius: 5px; color: #94A3B8;
+      transition: color .15s, background .15s;
+    }
+    .lang-switcher .lang-btn:hover { color: var(--white); }
+    .lang-switcher .lang-btn.active { color: var(--white); background: rgba(30,111,217,.35); }
+    .lang-switcher .lang-sep { font-size: 11px; user-select: none; opacity: .3; color: #94A3B8; }
+
+    .topbar {
+      display: flex; justify-content: flex-end; margin-bottom: 16px;
+    }
+
+    .hidden { display: none !important; }
+
+    @media (max-width: 600px) {
+      .form-grid-2 { grid-template-columns: 1fr; }
+      .type-grid { grid-template-columns: 1fr; }
+      .card { padding: 24px 20px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="topbar">
+      <div id="lang-switcher"></div>
+    </div>
+
+    <div class="brand">
+      <div class="brand-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          <polyline points="9 12 11 14 15 10"/>
+        </svg>
+      </div>
+      <span class="brand-name">ClaimLens AI</span>
+    </div>
+
+    <!-- Initial loading state -->
+    <div id="loading-state" class="card">
+      <p style="text-align:center;color:var(--gray-500)" data-i18n="public.loading">Verifying your claim link…</p>
+    </div>
+
+    <!-- Error state (invalid/expired/used) -->
+    <div id="error-state" class="error-screen hidden">
+      <div class="error-icon">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+          <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+      </div>
+      <h1 data-i18n="public.error.title">This link can't be used</h1>
+      <p id="error-msg" data-i18n="public.error.generic">Please contact your insurance broker for a new claim link.</p>
+    </div>
+
+    <!-- Main form state -->
+    <div id="form-state" class="card hidden">
+      <h1 data-i18n="public.form.title">Submit Your Claim</h1>
+      <p class="card-sub" data-i18n="public.form.subtitle">Please fill in the details of your incident. Your broker will review the information after submission.</p>
+
+      <div class="prefilled">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="flex-shrink:0">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+        </svg>
+        <div>
+          <span class="prefilled-label" data-i18n="public.form.for">For:</span>
+          <span id="pf-name"></span> · <span id="pf-policy" style="font-family:monospace"></span>
+        </div>
+      </div>
+
+      <form id="claim-form">
+        <div class="form-section">
+          <div class="form-section-title" data-i18n="public.form.type">Claim type</div>
+          <div class="type-grid">
+            <label onclick="selectType('auto')">
+              <input type="radio" name="claimType" value="auto" style="display:none">
+              <div class="type-card" id="type-auto">
+                <div class="type-card-title" data-i18n="submit.type.auto">Auto / Vehicle</div>
+                <div class="type-card-sub" data-i18n="submit.type.autoDesc">Car, truck, motorcycle</div>
+              </div>
+            </label>
+            <label onclick="selectType('property')">
+              <input type="radio" name="claimType" value="property" style="display:none">
+              <div class="type-card" id="type-property">
+                <div class="type-card-title" data-i18n="submit.type.property">Property</div>
+                <div class="type-card-sub" data-i18n="submit.type.propertyDesc">Home, contents, commercial</div>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="form-section">
+          <div class="form-section-title" data-i18n="submit.section.incident">Incident details</div>
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label class="form-label"><span data-i18n="submit.field.incidentDate">Date of Incident</span><span class="req">*</span></label>
+              <input class="form-input" type="date" name="incidentDate" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label"><span data-i18n="submit.field.reportDate">Date Reported</span><span class="req">*</span></label>
+              <input class="form-input" type="date" name="reportDate" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label"><span data-i18n="submit.field.location">Incident Location</span><span class="req">*</span></label>
+            <input class="form-input" name="incidentLocation" required data-i18n-placeholder="submit.field.locationPh" placeholder="Full address or location description">
+          </div>
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label class="form-label"><span data-i18n="submit.field.amount">Claimed Amount (£)</span><span class="req">*</span></label>
+              <input class="form-input" type="number" name="claimedAmount" required min="1" step="0.01" placeholder="0.00">
+            </div>
+            <div class="form-group">
+              <label class="form-label" data-i18n="submit.field.police">Police Report Number</label>
+              <input class="form-input" name="policeReport" data-i18n-placeholder="submit.field.policePh" placeholder="e.g. RPT-2026-12345 or N/A">
+            </div>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="form-section">
+          <div class="form-section-title" data-i18n="submit.section.desc">Descriptions</div>
+          <div class="form-group">
+            <label class="form-label"><span data-i18n="submit.field.incidentDesc">Incident Description</span><span class="req">*</span></label>
+            <textarea class="form-textarea" name="incidentDescription" required data-i18n-placeholder="submit.field.incidentDescPh" placeholder="Describe exactly what happened — include sequence of events, time, weather, any other relevant context."></textarea>
+          </div>
+          <div class="form-group">
+            <label class="form-label"><span data-i18n="submit.field.damageDesc">Damage Description</span><span class="req">*</span></label>
+            <textarea class="form-textarea" name="damageDescription" required data-i18n-placeholder="submit.field.damageDescPh" placeholder="List all damaged or lost items. Include make, model, and serial numbers where applicable." style="min-height:80px"></textarea>
+          </div>
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label class="form-label" data-i18n="submit.field.witnesses">Witnesses</label>
+              <input class="form-input" name="witnesses" data-i18n-placeholder="submit.field.witnessesPh" placeholder="Names and contact details, or 'None'">
+            </div>
+            <div class="form-group">
+              <label class="form-label" data-i18n="submit.field.prior">Previous Claims</label>
+              <input class="form-input" name="previousClaims" data-i18n-placeholder="submit.field.priorPh" placeholder="e.g. 2 (2023 theft, 2024 collision) or None">
+            </div>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="form-section">
+          <div class="form-section-title" data-i18n="submit.section.docs">Supporting documents</div>
+          <div class="form-section-desc" data-i18n="submit.section.docsDesc">Attach photos, receipts, or PDF reports. AI will analyse documents for additional fraud indicators. Up to 5 files, 20MB each.</div>
+          <div class="file-upload-area" id="upload-zone"
+               onclick="document.getElementById('file-input').click()"
+               ondragover="dragOver(event)"
+               ondragleave="dragLeave()"
+               ondrop="drop(event)">
+            <h4 data-i18n="submit.dropzone.title">Drop files here or click to browse</h4>
+            <p data-i18n="submit.dropzone.body">JPEG, PNG, WebP, PDF · Max 5 files · 20MB each</p>
+          </div>
+          <input type="file" id="file-input" style="display:none" accept=".jpg,.jpeg,.png,.gif,.webp,.pdf" multiple onchange="addFiles(event)">
+          <div id="file-tags" class="file-tags"></div>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block" id="submit-btn">
+          <span data-i18n="public.form.submit">Submit Claim</span>
+        </button>
+        <div id="form-error" style="color:#991B1B;font-size:13px;margin-top:10px;text-align:center;display:none"></div>
+      </form>
+    </div>
+
+    <!-- Success state -->
+    <div id="success-state" class="success-screen hidden">
+      <div class="success-icon">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
+      </div>
+      <h1 data-i18n="public.success.title">Thanks — your claim has been submitted</h1>
+      <p data-i18n="public.success.body">Your broker has been notified and will be in touch. Please keep your reference number below in case you need to follow up.</p>
+      <div class="reference-box">
+        <div class="reference-label" data-i18n="public.success.reference">Reference</div>
+        <div class="reference-value" id="ref-number">—</div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/i18n.js"></script>
+  <script src="/js/claim-public.js"></script>
+</body>
+</html>

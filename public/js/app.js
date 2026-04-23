@@ -3,6 +3,52 @@
 // Short alias — falls back to the raw key if i18n hasn't loaded for any reason.
 const T = (k, vars) => (window.i18n ? window.i18n.t(k, vars) : k);
 
+// ── AI image detection card (shared between result + detail views) ─────────
+function renderAiImageCheck(check) {
+  if (!check || !check.summary) return '';
+  const { verdict, maxScore, worstImage } = check.summary;
+  if (!verdict || verdict === 'skipped') return '';
+
+  const colours = {
+    likely:   { bg: '#FEE2E2', border: '#FECACA', text: '#991B1B', dot: '#EF4444' },
+    possible: { bg: '#FEF3C7', border: '#FDE68A', text: '#92400E', dot: '#F59E0B' },
+    unlikely: { bg: '#D1FAE5', border: '#A7F3D0', text: '#065F46', dot: '#10B981' },
+    error:    { bg: '#F1F5F9', border: '#E2E8F0', text: '#334155', dot: '#94A3B8' }
+  };
+  const c = colours[verdict] || colours.error;
+  const scorePct = maxScore != null ? Math.round(maxScore * 100) : null;
+
+  return `
+    <div class="card" style="margin-bottom:22px">
+      <div class="card-header"><h3>${T('aiDetect.title')}</h3></div>
+      <div class="card-body">
+        <div style="display:flex;align-items:flex-start;gap:12px;padding:14px;border-radius:10px;background:${c.bg};border:1px solid ${c.border}">
+          <div style="width:10px;height:10px;border-radius:50%;background:${c.dot};margin-top:6px;flex-shrink:0"></div>
+          <div style="flex:1;min-width:0">
+            <div style="font-weight:700;color:${c.text};font-size:14px">${T('aiDetect.verdict.' + verdict)}</div>
+            ${verdict !== 'error' && scorePct != null ? `<div style="font-size:12px;color:${c.text};opacity:.8;margin-top:2px">${T('aiDetect.score', { n: scorePct })}${worstImage ? ` · ${T('aiDetect.worst', { name: worstImage })}` : ''}</div>` : ''}
+            ${verdict !== 'error' && T('aiDetect.explainer.' + verdict) ? `<div style="font-size:13px;color:#334155;margin-top:8px;line-height:1.6">${T('aiDetect.explainer.' + verdict)}</div>` : ''}
+          </div>
+        </div>
+        ${(check.perImage && check.perImage.length > 1) ? `
+        <div style="margin-top:14px">
+          <div style="font-size:12px;font-weight:600;color:#64748B;margin-bottom:8px">${T('aiDetect.perImage')}</div>
+          ${check.perImage.map(img => {
+            const v = colours[img.verdict] || colours.error;
+            const pct = img.score != null ? Math.round(img.score * 100) : null;
+            return `<div style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;border:1px solid #E2E8F0;border-radius:8px;margin-bottom:6px;font-size:13px">
+              <div style="display:flex;align-items:center;gap:8px;min-width:0;flex:1">
+                <div style="width:8px;height:8px;border-radius:50%;background:${v.dot};flex-shrink:0"></div>
+                <span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${img.name}</span>
+              </div>
+              <div style="font-weight:600;color:${v.text};flex-shrink:0;margin-left:12px">${img.checked ? pct + '%' : T('aiDetect.verdict.' + img.verdict)}</div>
+            </div>`;
+          }).join('')}
+        </div>` : ''}
+      </div>
+    </div>`;
+}
+
 // ── Badges (shared component) ──────────────────────────────────────────────
 
 window.Badges = {
@@ -27,13 +73,14 @@ window.App = {
 
   // Page titles/subtitles are now keyed into i18n — see page.* in i18n.js.
   pageConfig: {
-    dashboard: { title: 'page.dashboard.title', subtitle: 'page.dashboard.subtitle' },
-    submit:    { title: 'page.submit.title',    subtitle: 'page.submit.subtitle' },
-    queue:     { title: 'page.queue.title',     subtitle: 'page.queue.subtitle' },
-    history:   { title: 'page.history.title',   subtitle: 'page.history.subtitle' },
-    settings:  { title: 'page.settings.title',  subtitle: 'page.settings.subtitle' },
-    detail:    { title: 'page.detail.title',    subtitle: 'page.detail.subtitle' },
-    result:    { title: 'page.result.title',    subtitle: 'page.result.subtitle' }
+    dashboard:   { title: 'page.dashboard.title',   subtitle: 'page.dashboard.subtitle' },
+    submit:      { title: 'page.submit.title',      subtitle: 'page.submit.subtitle' },
+    invitations: { title: 'page.invitations.title', subtitle: 'page.invitations.subtitle' },
+    queue:       { title: 'page.queue.title',       subtitle: 'page.queue.subtitle' },
+    history:     { title: 'page.history.title',     subtitle: 'page.history.subtitle' },
+    settings:    { title: 'page.settings.title',    subtitle: 'page.settings.subtitle' },
+    detail:      { title: 'page.detail.title',      subtitle: 'page.detail.subtitle' },
+    result:      { title: 'page.result.title',      subtitle: 'page.result.subtitle' }
   },
 
   navigate(view, data = null) {
@@ -57,14 +104,15 @@ window.App = {
     void area.offsetWidth;
 
     switch (view) {
-      case 'dashboard': DashboardView.render(); break;
-      case 'submit':    SubmitView.render(); break;
-      case 'queue':     QueueView.render(); break;
-      case 'history':   HistoryView.render(); break;
-      case 'settings':  SettingsView.render(); break;
-      case 'result':    this._renderResult(this.state.lastResult); break;
-      case 'detail':    this._renderDetail(data || this.state.selectedClaim); break;
-      default:          DashboardView.render();
+      case 'dashboard':   DashboardView.render(); break;
+      case 'submit':      SubmitView.render(); break;
+      case 'invitations': InvitationsView.render(); break;
+      case 'queue':       QueueView.render(); break;
+      case 'history':     HistoryView.render(); break;
+      case 'settings':    SettingsView.render(); break;
+      case 'result':      this._renderResult(this.state.lastResult); break;
+      case 'detail':      this._renderDetail(data || this.state.selectedClaim); break;
+      default:            DashboardView.render();
     }
   },
 
@@ -179,6 +227,8 @@ window.App = {
           </div>
         </div>` : ''}
 
+        ${renderAiImageCheck(claim.aiImageCheck)}
+
         <div class="card" style="margin-bottom:22px">
           <div class="card-header"><h3>${T('result.recommendation')}</h3></div>
           <div class="card-body"><p style="font-size:14px;color:#334155;line-height:1.75">${a.recommendation || '—'}</p></div>
@@ -287,6 +337,8 @@ window.App = {
               </div>`).join('')}` : ''}
           </div>
         </div>` : ''}
+
+        ${renderAiImageCheck(claim.aiImageCheck)}
 
         <!-- Audit Trail -->
         ${(claim.auditTrail?.length || 0) > 0 ? `

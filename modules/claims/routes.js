@@ -10,6 +10,7 @@ const claimsStore = require('../../store/claims');
 const settingsStore = require('../../store/settings');
 const claudeAnalysis = require('../analysis/claude');
 const heuristicAnalysis = require('../analysis/heuristic');
+const aiDetection = require('../analysis/ai-detection');
 
 const upload = multer({
   storage: multer.memoryStorage(),
@@ -68,15 +69,23 @@ router.post('/claims', upload.array('documents', 5), async (req, res) => {
       riskLevel: null,
       fraudScore: null,
       analysis: null,
+      aiImageCheck: null,
       submittedAt: new Date().toISOString(),
       auditTrail: [{ timestamp: new Date().toISOString(), actor: 'System', action: 'submitted', notes: `${files.length} document(s) attached` }]
     };
 
-    // Run analysis
+    // Run fraud analysis + AI image detection in parallel where possible.
+    const aiCheckPromise = aiDetection.checkAll(req.files || []);
+
+    // Language preference: claimData.lang wins, otherwise honour Accept-Language, otherwise English.
+    const lang = (claimData.lang === 'fr' || claimData.lang === 'en')
+      ? claimData.lang
+      : ((req.headers['accept-language'] || '').toLowerCase().startsWith('fr') ? 'fr' : 'en');
+
     try {
       const useAI = !!process.env.ANTHROPIC_API_KEY;
       const result = useAI
-        ? await claudeAnalysis.analyze(claimData, req.files || [], settings)
+        ? await claudeAnalysis.analyze(claimData, req.files || [], settings, lang)
         : heuristicAnalysis.analyze(claimData, req.files || [], settings);
 
       claim.analysis = result;
@@ -100,6 +109,25 @@ router.post('/claims', upload.array('documents', 5), async (req, res) => {
       claim.fraudScore = fallback.fraud_score;
       claim.riskLevel = fallback.risk_level;
       claim.status = fallback.risk_level === 'low' ? 'low-risk' : 'pending-review';
+    }
+
+    // Attach AI image detection results (never blocks the claim — errors are swallowed)
+    try {
+      const perImage = await aiCheckPromise;
+      const summary = aiDetection.summarise(perImage);
+      if (perImage.length > 0 && summary.verdict !== 'skipped') {
+        claim.aiImageCheck = { summary, perImage };
+        if (summary.verdict === 'likely') {
+          claim.auditTrail.push({
+            timestamp: new Date().toISOString(),
+            actor: 'System',
+            action: 'flagged',
+            notes: `AI-generated image suspected: ${summary.worstImage} (${Math.round((summary.maxScore || 0) * 100)}% confidence)`
+          });
+        }
+      }
+    } catch (detectionErr) {
+      console.warn('[ai-detection] unexpected failure:', detectionErr.message);
     }
 
     claimsStore.create(claim);

@@ -92,7 +92,40 @@ pushes. Roles: `admin` (sees Settings) or `user` (hidden from Settings).
 - **`data/users.json` IS committed** (only `claims.json` and `settings.json` are gitignored),
   so new users ship with a `git push`.
 - **`.env` is gitignored** — ANTHROPIC_API_KEY must be set in Railway's dashboard env vars,
-  not in the repo.
+  not in the repo. Same for `SIGHTENGINE_USER` and `SIGHTENGINE_SECRET` (AI image detection).
+
+## Claimant invitation links
+
+Brokers can generate a secure public link to send to a claimant so the claimant
+submits their own claim without needing an account. Replaces (or supplements)
+the broker typing the claim in themselves.
+
+- Broker-facing view: `public/js/views/invitations.js` + "Send Link" nav item
+- Broker store: `store/invitations.js` — tokens persisted in `data/invitations.json` (gitignored)
+- Broker API: `POST /api/invitations` (create), `GET /api/invitations` (list)
+- Public routes (exempt from auth via the `/public/` path prefix):
+  - `GET /api/public/invitations/:token` — returns prefilled name/policy/type, nothing else
+  - `POST /api/public/claims/:token` — submits a claim using the token
+- Claimant page: `public/claim.html` + `public/js/claim-public.js`, served at `/claim/:token`
+- Tokens are 32-char hex, expire after 30 days, one-shot (status flips to `submitted` after use)
+- Claims submitted via a link carry `source: 'claimant-link'` and `invitationToken: <token>`
+- Claim `owner` is set to the broker who generated the link — so it lands in their dashboard
+- The claimant only sees a thank-you + reference number; they never see the fraud analysis
+- Auth middleware in `modules/auth/routes.js` skips any path starting with `/public/`
+
+## AI image detection
+
+Uploaded claim photos are checked against Sightengine's `genai` model to flag
+AI-generated images (fraudsters submitting fake "damage" photos).
+
+- Module: `modules/analysis/ai-detection.js`
+- Runs in parallel with the main fraud analysis during claim submission
+- Requires env vars `SIGHTENGINE_USER` + `SIGHTENGINE_SECRET` (sign up at sightengine.com — free tier)
+- Silently skipped if env vars aren't set — the claim still submits normally
+- Result stored on `claim.aiImageCheck` as `{ summary: { verdict, maxScore, worstImage }, perImage: [...] }`
+- Verdict tiers: `likely` (≥70% AI), `possible` (40–69%), `unlikely` (<40%)
+- "Likely" verdicts append a flag to the audit trail automatically
+- Rendered via `renderAiImageCheck()` in `public/js/app.js` — shown on both the result and detail views
 
 ## Recent work log
 
@@ -101,6 +134,15 @@ Add a dated bullet every time we ship something so future-me has context.
 - **2026-04-23** — Added EN/FR language toggle (new `public/js/i18n.js`, tagged all views,
   mounted switcher in navbar/login/sidebar). Shipped in commit `e062074`.
 - **2026-04-23** — Added `user1` / `password1` account.
+- **2026-04-23** — Added AI-generated image detection via Sightengine (`modules/analysis/ai-detection.js`,
+  wired into claim submission, shown on result + detail views with EN/FR labels).
+- **2026-04-23** — Added claimant invitation links: brokers generate a public URL, claimants submit
+  without an account, claim lands in the broker's dashboard. New module
+  `modules/invitations/`, new page `public/claim.html`, new view `js/views/invitations.js`.
+- **2026-04-23** — Analysis now respects the user's language. Forms (broker submit + public claim)
+  send `claimData.lang` ('en' | 'fr'); `modules/analysis/claude.js` includes a FR directive
+  when `lang === 'fr'`. Enum fields (`risk_level`, `severity`) stay English — used by code.
+  Heuristic fallback remains English-only (only runs if ANTHROPIC_API_KEY is unset).
 
 ## How Billy likes to work
 

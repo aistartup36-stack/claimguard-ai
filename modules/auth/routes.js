@@ -85,8 +85,8 @@ router.post('/auth/logout', (req, res) => {
 // ── Middleware ────────────────────────────────────────────────────────────────
 
 function requireAuth(req, res, next) {
-  // Skip auth routes themselves
-  if (req.path.startsWith('/auth/')) return next();
+  // Skip auth routes themselves and public claimant-link endpoints
+  if (req.path.startsWith('/auth/') || req.path.startsWith('/public/')) return next();
 
   const user = getSessionUser(req);
   if (!user) {
