@@ -143,6 +143,57 @@ Add a dated bullet every time we ship something so future-me has context.
   send `claimData.lang` ('en' | 'fr'); `modules/analysis/claude.js` includes a FR directive
   when `lang === 'fr'`. Enum fields (`risk_level`, `severity`) stay English — used by code.
   Heuristic fallback remains English-only (only runs if ANTHROPIC_API_KEY is unset).
+- **2026-04-23** — Audit trail entries now translate on the fly. System-generated notes are
+  stored as structured objects `{ key: 'audit.note.xxx', vars: {...} }`; the renderer
+  translates via i18n based on the ACTIVE language, so flipping EN↔FR re-translates old
+  entries live. Plain-string notes (seed claims, reviewer free-text) still render as-is
+  for backward compatibility. Shipped in commit `dc4f2e8`.
+
+## Open threads (pick up here next session)
+
+### French insurance client — production hardening plan
+
+Billy has a French client interested in using the platform. They're worried about data
+breach. We agreed on a tiered hardening roadmap but haven't started it yet. Stack ranking:
+
+**Tier 1 (next day or two — biggest client credibility win):**
+- Move Railway deployment to EU West region (Amsterdam) — data residency. Quick dashboard job.
+- Swap SHA-256 password hashing for bcrypt + quiet migration on next login.
+- Add `express-rate-limit` to the login endpoint (brute-force protection).
+- Add security headers via `helmet` (HSTS, CSP, X-Frame-Options).
+- Enforce HTTPS redirects.
+- Write a bilingual (EN/FR) Security & Data Handling page, linked from the footer.
+
+**Tier 2 (week or two — real production readiness):**
+- Migrate `data/*.json` to Postgres (Railway add-on). Solves the ephemeral filesystem
+  problem AND gives encryption at rest + backups.
+- Add login/access audit logs (separate from the per-claim audit trail).
+- Add 2FA (optional but great trust signal).
+- Add GDPR data-export + right-to-erasure endpoints.
+- Draft a DPA in French (template, then a lawyer review before signing).
+
+**Tier 3 (if the client is big/regulated):**
+- Independent security audit / pen-test.
+- SOC 2 or ISO 27001 path.
+- Formal Data Processing Agreement.
+
+French regulatory landscape notes: CNIL enforces GDPR strictly; ACPR supervises insurance;
+DORA (in force Jan 2025) applies if client is a financial/insurance firm. Sightengine is
+already Paris-based (plus). Anthropic has an EU data processing addendum.
+
+### Ephemeral storage — known bug/feature
+
+Every `git push` → Railway redeploy → `data/claims.json`, `data/settings.json`,
+`data/invitations.json` get wiped. Committed demo claims in `store/claims.js` repopulate.
+**Fix:** Postgres migration (in Tier 2). Until then, don't put real claims on the live site.
+
+### Nice-to-have follow-ups (not urgent)
+
+- Translate the 12 seed claims' audit trail notes (currently plain English strings).
+- Set a proper git committer identity (`git config --global user.email "…"`) so commits
+  don't show `bcw@Billys-MacBook-Air.local`.
+- Offer brokers a QR-code version of the claim link for in-person handoffs.
+- "Resend link" / "Revoke link" actions on pending invitations.
 
 ## How Billy likes to work
 
