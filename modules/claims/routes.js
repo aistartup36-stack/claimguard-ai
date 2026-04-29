@@ -79,8 +79,19 @@ router.post('/claims', upload.array('documents', 5), async (req, res) => {
       }]
     };
 
-    // Run fraud analysis + AI image detection in parallel where possible.
-    const aiCheckPromise = aiDetection.checkAll(req.files || []);
+    // Run AI image detection FIRST so Claude can integrate the verdict into
+    // its analysis (rather than independently — and unreliably — judging
+    // whether photos are AI-generated). Sightengine is fast (~1–3s/image).
+    let aiImageCheck = null;
+    try {
+      const perImage = await aiDetection.checkAll(req.files || []);
+      const summary = aiDetection.summarise(perImage);
+      if (perImage.length > 0 && summary.verdict !== 'skipped') {
+        aiImageCheck = { summary, perImage };
+      }
+    } catch (detectionErr) {
+      console.warn('[ai-detection] unexpected failure:', detectionErr.message);
+    }
 
     // Language preference: claimData.lang wins, otherwise honour Accept-Language, otherwise English.
     const lang = (claimData.lang === 'fr' || claimData.lang === 'en')
@@ -90,15 +101,29 @@ router.post('/claims', upload.array('documents', 5), async (req, res) => {
     try {
       const useAI = !!process.env.ANTHROPIC_API_KEY;
       const result = useAI
-        ? await claudeAnalysis.analyze(claimData, req.files || [], settings, lang)
+        ? await claudeAnalysis.analyze(claimData, req.files || [], settings, lang, aiImageCheck)
         : heuristicAnalysis.analyze(claimData, req.files || [], settings);
 
       claim.analysis = result;
       claim.fraudScore = result.fraud_score;
       claim.riskLevel = result.risk_level;
 
-      const { escalationEnabled, lowRiskThreshold } = settings;
-      if (result.risk_level === 'low') {
+      // Hard floor: if Sightengine flagged the image as likely/possible AI-generated,
+      // guarantee the score reflects that even if Claude under-weighted the signal.
+      if (aiImageCheck?.summary?.verdict === 'likely' && claim.fraudScore < 90) {
+        claim.fraudScore = 90;
+        claim.riskLevel = 'high';
+        claim.analysis.fraud_score = 90;
+        claim.analysis.risk_level = 'high';
+      } else if (aiImageCheck?.summary?.verdict === 'possible' && claim.fraudScore < 60) {
+        claim.fraudScore = 60;
+        claim.riskLevel = 'medium';
+        claim.analysis.fraud_score = 60;
+        claim.analysis.risk_level = 'medium';
+      }
+
+      const { escalationEnabled } = settings;
+      if (claim.riskLevel === 'low') {
         claim.status = 'low-risk';
       } else if (escalationEnabled) {
         claim.status = 'pending-review';
@@ -106,38 +131,43 @@ router.post('/claims', upload.array('documents', 5), async (req, res) => {
           timestamp: new Date().toISOString(),
           actor: 'System',
           action: 'escalated',
-          notes: { key: 'audit.note.escalated', vars: { level: result.risk_level, score: result.fraud_score } }
+          notes: { key: 'audit.note.escalated', vars: { level: claim.riskLevel, score: claim.fraudScore } }
         });
       } else {
         claim.status = 'low-risk'; // escalation disabled
       }
     } catch (analysisErr) {
       console.error('Analysis error:', analysisErr.message);
-      // Fallback to heuristic
+      // Fallback to heuristic — but still respect the AI-image floor
       const fallback = heuristicAnalysis.analyze(claimData, [], settings);
       claim.analysis = { ...fallback, summary: `[Analysis error: ${analysisErr.message}]\n\n` + fallback.summary };
       claim.fraudScore = fallback.fraud_score;
       claim.riskLevel = fallback.risk_level;
-      claim.status = fallback.risk_level === 'low' ? 'low-risk' : 'pending-review';
+      if (aiImageCheck?.summary?.verdict === 'likely' && claim.fraudScore < 90) {
+        claim.fraudScore = 90;
+        claim.riskLevel = 'high';
+        claim.analysis.fraud_score = 90;
+        claim.analysis.risk_level = 'high';
+      } else if (aiImageCheck?.summary?.verdict === 'possible' && claim.fraudScore < 60) {
+        claim.fraudScore = 60;
+        claim.riskLevel = 'medium';
+        claim.analysis.fraud_score = 60;
+        claim.analysis.risk_level = 'medium';
+      }
+      claim.status = claim.riskLevel === 'low' ? 'low-risk' : 'pending-review';
     }
 
-    // Attach AI image detection results (never blocks the claim — errors are swallowed)
-    try {
-      const perImage = await aiCheckPromise;
-      const summary = aiDetection.summarise(perImage);
-      if (perImage.length > 0 && summary.verdict !== 'skipped') {
-        claim.aiImageCheck = { summary, perImage };
-        if (summary.verdict === 'likely') {
-          claim.auditTrail.push({
-            timestamp: new Date().toISOString(),
-            actor: 'System',
-            action: 'flagged',
-            notes: { key: 'audit.note.flaggedAi', vars: { name: summary.worstImage, pct: Math.round((summary.maxScore || 0) * 100) } }
-          });
-        }
+    // Attach the Sightengine result for the UI panel (already computed above).
+    if (aiImageCheck) {
+      claim.aiImageCheck = aiImageCheck;
+      if (aiImageCheck.summary.verdict === 'likely') {
+        claim.auditTrail.push({
+          timestamp: new Date().toISOString(),
+          actor: 'System',
+          action: 'flagged',
+          notes: { key: 'audit.note.flaggedAi', vars: { name: aiImageCheck.summary.worstImage, pct: Math.round((aiImageCheck.summary.maxScore || 0) * 100) } }
+        });
       }
-    } catch (detectionErr) {
-      console.warn('[ai-detection] unexpected failure:', detectionErr.message);
     }
 
     claimsStore.create(claim);

@@ -17,13 +17,35 @@ function daysBetween(d1, d2) {
 }
 
 /**
- * @param {Object} claimData   — parsed claim form fields
- * @param {Array}  fileBuffers — [{ buffer: Buffer, mimetype: string, originalname: string }]
- * @param {Object} settings    — { lowRiskThreshold, highRiskThreshold }
- * @param {String} lang        — 'en' | 'fr' (controls the language of free-text output)
- * @returns {Object}           — analysis result
+ * Format the Sightengine AI-image-detection result for inclusion in Claude's
+ * prompt, so Claude can integrate it instead of independently judging
+ * "does this photo look real" — modern AI images often fool human/vision
+ * models even when a specialised classifier catches them.
  */
-async function analyze(claimData, fileBuffers = [], settings = {}, lang = 'en') {
+function formatAiImageCheckBlock(aiImageCheck) {
+  if (!aiImageCheck || !aiImageCheck.summary || aiImageCheck.summary.verdict === 'skipped') return '';
+  const { verdict, maxScore, worstImage } = aiImageCheck.summary;
+  const pct = Math.round((maxScore || 0) * 100);
+
+  if (verdict === 'likely') {
+    return `\nAI-GENERATION DETECTOR (Sightengine genai model, specialised AI-image classifier — more reliable than visual inspection):\n  VERDICT: LIKELY AI-GENERATED\n  Highest score: ${pct}% on "${worstImage}".\n\nIMPORTANT — TRUST THIS SIGNAL:\n• Modern AI-generated images (Higgsfield, Midjourney, Sora, etc.) routinely fool visual inspection. Do NOT independently conclude the photograph "appears genuine" or shows "no signs of digital manipulation" based on what you see — the classifier is more reliable than visual inspection for this signal.\n• Treat this as a strong fraud indicator. Reflect it explicitly in fraud_score (this alone justifies a high-risk score), in indicators (add a high-severity, high-confidence "AI-Generated Imagery" indicator), in key_concerns, and in recommendation.\n• Do NOT add positive_factors that praise the photograph's authenticity.\n`;
+  }
+  if (verdict === 'possible') {
+    return `\nAI-GENERATION DETECTOR (Sightengine genai model):\n  VERDICT: POSSIBLY AI-GENERATED (${pct}% on "${worstImage}")\nTreat as a moderate fraud signal — include a medium-severity indicator and reflect it in the score. Do NOT add positive_factors claiming the photograph is genuine.\n`;
+  }
+  // 'unlikely' — pass through as a mild positive
+  return `\nAI-GENERATION DETECTOR (Sightengine genai model):\n  VERDICT: UNLIKELY AI-GENERATED (max score across images: ${pct}%) — image authenticity passes the classifier.\n`;
+}
+
+/**
+ * @param {Object} claimData     — parsed claim form fields
+ * @param {Array}  fileBuffers   — [{ buffer: Buffer, mimetype: string, originalname: string }]
+ * @param {Object} settings      — { lowRiskThreshold, highRiskThreshold }
+ * @param {String} lang          — 'en' | 'fr' (controls the language of free-text output)
+ * @param {Object} aiImageCheck  — Sightengine result { summary, perImage } or null
+ * @returns {Object}             — analysis result
+ */
+async function analyze(claimData, fileBuffers = [], settings = {}, lang = 'en', aiImageCheck = null) {
   const { lowRiskThreshold = 30, highRiskThreshold = 65 } = settings;
   const delay = daysBetween(claimData.incidentDate, claimData.reportDate);
   const content = [];
@@ -54,6 +76,8 @@ async function analyze(claimData, fileBuffers = [], settings = {}, lang = 'en') 
     ? `${fileBuffers.length} supporting document(s) are attached. Analyse each for authenticity, consistency with the claim, signs of digital alteration, and additional fraud indicators.`
     : 'No supporting documents were provided with this claim.';
 
+  const aiCheckBlock = formatAiImageCheckBlock(aiImageCheck);
+
   content.push({ type: 'text', text: `${langBlock}You are ClaimLens AI, an expert insurance fraud analyst with 20+ years of experience. Analyse this ${claimData.claimType === 'auto' ? 'auto/vehicle' : 'property'} insurance claim for fraud.
 
 CLAIM DETAILS:
@@ -75,7 +99,7 @@ DAMAGE:
 ${claimData.damageDescription}
 
 DOCUMENTS: ${fileNote}
-
+${aiCheckBlock}
 Analyse for: delayed/inconsistent timelines, inflated estimates, vague/scripted descriptions, missing documentation, claim history patterns, document anomalies, geographic implausibilities, classic fraud narratives.
 
 Respond with ONLY raw valid JSON (no markdown, no code fences):
