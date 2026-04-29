@@ -4,6 +4,7 @@
  */
 
 const Anthropic = require('@anthropic-ai/sdk');
+const { compressForClaude } = require('./image-utils');
 
 let _client = null;
 function client() {
@@ -34,8 +35,13 @@ async function analyze(claimData, fileBuffers = [], settings = {}, lang = 'en') 
     ? `LANGUE DE RÉPONSE : Répondez ENTIÈREMENT EN FRANÇAIS. Tout le texte libre (résumé, descriptions d'indicateurs, catégories, préoccupations clés, facteurs positifs, recommandation) doit être rédigé en français professionnel, adapté au secteur de l'assurance française. IMPORTANT : les valeurs des champs « risk_level » et « severity » DOIVENT rester en anglais (low / medium / high) car elles sont utilisées par le code ; elles seront traduites dans l'interface. Utilisez le symbole £ tel quel pour les montants.\n\n`
     : '';
 
-  // Attach files (images as vision, PDFs as document blocks)
-  for (const f of fileBuffers) {
+  // Attach files (images as vision, PDFs as document blocks).
+  // Images are first piped through compressForClaude() so phone-camera uploads
+  // (often 8–15 MB) don't trip Claude's 5 MB base64 limit.
+  for (const original of fileBuffers) {
+    const f = original.mimetype && original.mimetype.startsWith('image/')
+      ? await compressForClaude(original)
+      : original;
     const b64 = f.buffer.toString('base64');
     if (f.mimetype.startsWith('image/')) {
       content.push({ type: 'image', source: { type: 'base64', media_type: f.mimetype, data: b64 } });

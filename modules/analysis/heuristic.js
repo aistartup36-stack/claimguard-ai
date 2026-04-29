@@ -72,12 +72,12 @@ function analyze(claimData, fileBuffers = [], settings = {}) {
     fraud_score: score,
     risk_level: riskLevel,
     indicators,
-    summary: `[DEMO MODE — Add ANTHROPIC_API_KEY to .env for full Claude AI analysis]\n\nThis ${claimData.claimType} claim from ${claimData.claimantName} has been assessed using heuristic rules. Claimed amount: \u00A3${amount.toLocaleString('en-GB')} — reported ${delay} day(s) after the incident. ${indicators.length > 0 ? `${indicators.length} potential concern(s) were identified.` : 'No major red flags were detected by the heuristic engine.'}`,
+    summary: `This ${claimData.claimType} claim from ${claimData.claimantName} has been assessed using rule-based heuristics. Claimed amount: \u00A3${amount.toLocaleString('en-GB')} — reported ${delay} day(s) after the incident. ${indicators.length > 0 ? `${indicators.length} potential concern(s) were identified.` : 'No major red flags were detected by the heuristic engine.'}`,
     key_concerns: indicators.filter(i => i.severity === 'high').map(i => i.description),
     positive_factors: positiveFactor,
     recommendation: riskLevel === 'low'
-      ? 'Claim appears routine. Standard processing recommended. Add your ANTHROPIC_API_KEY for full AI analysis.'
-      : 'Human review recommended. Add your ANTHROPIC_API_KEY for detailed AI-powered fraud indicators.',
+      ? 'Claim appears routine. Standard processing recommended.'
+      : 'Human review recommended.',
     estimated_legitimate_value: amount
   };
 }

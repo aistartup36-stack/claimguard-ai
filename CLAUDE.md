@@ -143,6 +143,15 @@ Add a dated bullet every time we ship something so future-me has context.
   send `claimData.lang` ('en' | 'fr'); `modules/analysis/claude.js` includes a FR directive
   when `lang === 'fr'`. Enum fields (`risk_level`, `severity`) stay English — used by code.
   Heuristic fallback remains English-only (only runs if ANTHROPIC_API_KEY is unset).
+- **2026-04-29** — Sightengine env vars (`SIGHTENGINE_USER` + `SIGHTENGINE_SECRET`) finally
+  added in Railway, so the AI image detection that shipped on the 23rd is now live. Confirmed
+  working — flagged a Higgsfield test image at 98% AI probability.
+- **2026-04-29** — Fixed silent Claude failure on phone-camera uploads. Added `sharp` and
+  `modules/analysis/image-utils.js` with `compressForClaude()`: any image > 4.5 MB is auto-resized
+  to 2000 px wide and re-encoded as JPEG q80 before being sent to Claude. iPhone uploads
+  (typically 8–15 MB) used to fail Claude's 5 MB base64 cap and silently fall back to heuristic;
+  they now pass through cleanly. Also stripped the misleading "[DEMO MODE — Add ANTHROPIC_API_KEY]"
+  fallback text from `heuristic.js` so future genuine analysis errors aren't camouflaged.
 - **2026-04-23** — Audit trail entries now translate on the fly. System-generated notes are
   stored as structured objects `{ key: 'audit.note.xxx', vars: {...} }`; the renderer
   translates via i18n based on the ACTIVE language, so flipping EN↔FR re-translates old
