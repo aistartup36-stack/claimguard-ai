@@ -62,7 +62,7 @@ window.i18n = (() => {
 
       'cta.title':           'Ready to stop fraud in its tracks?',
       'cta.desc':            'See ClaimLens AI in action with a live demo account.',
-      'cta.button':          'Login to Demo',
+      'cta.button':          'Book a Demo',
 
       'footer.copyright':    'ClaimLens AI © 2026. All rights reserved.',
       'footer.contact':      'Contact:',
@@ -515,7 +515,7 @@ window.i18n = (() => {
 
       'cta.title':           'Prêt à stopper la fraude net ?',
       'cta.desc':            'Voyez ClaimLens AI en action avec un compte de démo en direct.',
-      'cta.button':          'Se connecter à la démo',
+      'cta.button':          'Réserver une démo',
 
       'footer.copyright':    'ClaimLens AI © 2026. Tous droits réservés.',
       'footer.contact':      'Contact :',

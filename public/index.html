@@ -253,6 +253,21 @@
     .fade-up-d3 { animation-delay: .3s; }
     .fade-up-d4 { animation-delay: .4s; }
   </style>
+
+  <!-- ── Cal.com booking widget ───────────────────────────────────────────────
+       Loads the Cal.com popup embed. Any element with `data-cal-link` opens
+       the inline booker. Bound to cal.com/claimlens/30min.
+  -->
+  <script type="text/javascript">
+    (function (C, A, L) { let p = function (a, ar) { a.q.push(ar); }; let d = C.document; C.Cal = C.Cal || function () { let cal = C.Cal; let ar = arguments; if (!cal.loaded) { cal.ns = {}; cal.q = cal.q || []; d.head.appendChild(d.createElement("script")).src = A; cal.loaded = true; } if (ar[0] === L) { const api = function () { p(api, arguments); }; const namespace = ar[1]; api.q = api.q || []; if(typeof namespace === "string"){cal.ns[namespace] = cal.ns[namespace] || api;p(cal.ns[namespace], ar);p(cal, ["initNamespace", namespace]);} else p(cal, ar); return;} p(cal, ar); }; })(window, "https://app.cal.com/embed/embed.js", "init");
+    Cal("init", "demo", { origin: "https://cal.com" });
+    Cal.ns.demo("ui", {
+      theme: "light",
+      cssVarsPerTheme: { light: { "cal-brand": "#1E6FD9" } },
+      hideEventTypeDetails: false,
+      layout: "month_view"
+    });
+  </script>
 </head>
 <body>
 
@@ -285,7 +300,7 @@
       <h1 class="fade-up fade-up-d1"><span data-i18n="hero.title.line1">Stop Insurance Fraud</span><br><span data-i18n="hero.title.line2">Before It Costs You</span></h1>
       <p class="hero-sub fade-up fade-up-d2" data-i18n="hero.subtitle">AI-powered claims analysis that detects fraudulent claims in seconds, not days. Built for UK and European insurance brokers.</p>
       <div class="hero-buttons fade-up fade-up-d3">
-        <a href="/login" class="btn-hero btn-primary-hero"><span data-i18n="hero.cta.demo">Request a Demo</span> <span class="hero-arrow">&rarr;</span></a>
+        <button type="button" class="btn-hero btn-primary-hero" data-cal-link="claimlens/30min" data-cal-namespace="demo" data-cal-config='{"layout":"month_view","theme":"light"}'><span data-i18n="hero.cta.demo">Request a Demo</span> <span class="hero-arrow">&rarr;</span></button>
         <a href="#how-it-works" class="btn-hero btn-outline-hero" data-i18n="hero.cta.how">See How It Works</a>
       </div>
     </div>
@@ -423,7 +438,7 @@
     <div class="cta-inner">
       <h2 data-i18n="cta.title">Ready to stop fraud in its tracks?</h2>
       <p data-i18n="cta.desc">See ClaimLens AI in action with a live demo account.</p>
-      <a href="/login" class="btn-hero btn-primary-hero" style="font-size:16px"><span data-i18n="cta.button">Login to Demo</span> <span class="hero-arrow">&rarr;</span></a>
+      <button type="button" class="btn-hero btn-primary-hero" style="font-size:16px" data-cal-link="claimlens/30min" data-cal-namespace="demo" data-cal-config='{"layout":"month_view","theme":"light"}'><span data-i18n="cta.button">Book a Demo</span> <span class="hero-arrow">&rarr;</span></button>
     </div>
   </section>
 
