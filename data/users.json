@@ -28,5 +28,11 @@
     "passwordHash": "0b14d501a594442a01c6859541bcb3e8164d183d32937b851835442f69d5c94e",
     "role": "user",
     "displayName": "User 1"
+  },
+  {
+    "username": "fruser2026",
+    "passwordHash": "ec990aa9b2c6ec47cf8b114ce2c94e34b8efbcde2ed36ca8d2c6852f30389e07",
+    "role": "user",
+    "displayName": "FR User"
   }
 ]
