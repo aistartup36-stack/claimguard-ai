@@ -174,13 +174,135 @@ Add a dated bullet every time we ship something so future-me has context.
   (typically 8–15 MB) used to fail Claude's 5 MB base64 cap and silently fall back to heuristic;
   they now pass through cleanly. Also stripped the misleading "[DEMO MODE — Add ANTHROPIC_API_KEY]"
   fallback text from `heuristic.js` so future genuine analysis errors aren't camouflaged.
+- **2026-04-29** — Namecheap account suspension → DNS outage (~90 minutes mid-afternoon).
+  Triggered by Namecheap's risk system flagging the account (probable cause: NordVPN was
+  on during a recent Namecheap session — VPN exit-node IPs are a classic trigger). Domain
+  itself was fine (active until 02-Apr-2027), but Namecheap pulled DNS service while the
+  account was locked, so `dig www.claimlens.co.uk` returned empty. Site stayed up at
+  `claimguard-ai-production.up.railway.app` throughout. Resolved by submitting unlock
+  documents (ID + proof of address) via Namecheap's unlock flow, ticket `NC-XPV-8716`;
+  DNS came back automatically once unlocked. **Lesson:** never log into Namecheap from a
+  VPN. **Bigger lesson:** registrar lockout = full DNS outage when registrar is also DNS
+  host. Cloudflare DNS migration is now urgent (see Open threads).
+- **2026-04-29** — Added French test account `fruser2026` / `DFbW5eRrSob5` (role: user,
+  display name: "FR User") for the first real test customer (a French insurance company).
+  Non-admin → empty dashboard on first login (no seed clutter). Stored in `data/users.json`.
+- **2026-04-29** — Marketing copy broadened from "Built for UK insurance brokers" to
+  "Built for UK and European insurance brokers" in both EN + FR (hero subtitle, meta
+  description). FR: "Conçu pour les courtiers en assurance au Royaume-Uni et en Europe."
+- **2026-04-29** — White-labelled all user-facing references to Claude / Anthropic:
+  hero badge ("Powered by Claude AI" → "AI-Powered Fraud Detection"), How It Works step 2,
+  settings status panel ("Claude AI Connected" → "AI Engine Connected"), settings model
+  name ("Claude Opus 4.6 (Anthropic)" → "ClaimLens AI Engine"), and the three error
+  messages in `claude.js` that bubble up into the user-facing "Analysis error" banner
+  ("Claude API error" → "AI service error" etc.). All internal code, comments, function
+  names (`compressForClaude`, `claude.js` filename, etc.) **left intact** — they're dev-side
+  only. Reasoning: avoid French regulatory questions ("where does Claude run? Is data
+  going to the US?") during demos and decouple brand from a single vendor. Anthropic still
+  needs to be disclosed as sub-processor when the privacy policy gets written.
+- **2026-04-29** — Removed the misleading "demo-notice" banner from the submit form
+  ("Claude AI analysis is enabled when ANTHROPIC_API_KEY is set in .env. Without it,
+  heuristic analysis is used."). Looked unprofessional and exposed internal env-var names
+  to end users. Banner div removed from `submit.js`; `submit.demoNotice` i18n key kept
+  (now reads "AI analysis is active." / "Analyse IA active.") — harmless dead key, kept
+  for backward compatibility.
+- **2026-04-29** — French postcode lookup. Detects format on the fly: 5 digits → French
+  BAN API (`api-adresse.data.gouv.fr`, official French gov, free, no API key); anything
+  else → existing UK postcodes.io. Initial implementation used `?type=municipality` filter
+  which broke for Paris arrondissements (75001–75020 are indexed by name not postcode).
+  **Fix:** drop the filter, take all results, filter to those whose `postcode` field
+  exactly matches input, dedupe by `city + postcode`. Verified working for `75001` (Paris),
+  `06000` (Nice), `13001` (Marseille), `69001` (Lyon). Placeholder updated to
+  `e.g. SW1A 1AA (UK) or 75001 (FR)` and FR equivalent.
+- **2026-04-29** — Cal.com booking flow on the marketing page. Both demo CTAs (hero
+  "Request a Demo" and bottom "Book a Demo") now open a Cal.com modal instead of
+  redirecting to /login. Bound to `cal.com/claimlens/30min` with `billy@claimlens.co.uk`
+  as organiser email (set up via Namecheap email forwarding to gmail). Themed in brand
+  blue `#1E6FD9`. Schedule timezone in Cal.com is set to Europe/London regardless of
+  Billy's physical location. Default video provider is Cal Video (browser-based, no
+  install required for prospects, supports screensharing).
+- **2026-04-29** — Upgraded Railway to Hobby plan (£5/mo). Trial credit timer is gone;
+  site no longer at risk of dropping if usage spikes. Includes $5/mo of usage credit so
+  net spend is roughly nil at current scale.
 - **2026-04-23** — Audit trail entries now translate on the fly. System-generated notes are
   stored as structured objects `{ key: 'audit.note.xxx', vars: {...} }`; the renderer
   translates via i18n based on the ACTIVE language, so flipping EN↔FR re-translates old
   entries live. Plain-string notes (seed claims, reviewer free-text) still render as-is
   for backward compatibility. Shipped in commit `dc4f2e8`.
 
+## Marketing & sales status
+
+### First test customer
+A French insurance company is the first real test of the platform. They get the
+`fruser2026` account (credentials above). Account is intentionally on a clean dashboard
+(no seed claims) so they only see what they themselves submit. They were the trigger
+for white-labelling Claude references and broadening marketing copy from UK-only.
+
+### Pricing strategy (agreed, not yet published anywhere on the site)
+- **Pilot tier (first 5 customers)**: €300/month flat, unlimited claims, 6-month
+  commitment. Required exchange: written testimonial, logo permission, reference call
+  rights. The French company is on this tier — propose it to them in writing rather
+  than verbally so the deal sticks.
+- **Standard pricing (after 3–5 paying customers + case studies)**:
+  - Starter — £500/month — up to 150 claims/mo
+  - Professional — £1,500/month — up to 750 claims/mo, priority support, SSO
+  - Enterprise — "Talk to us" — bespoke
+- **Annual billing**: 20% discount.
+- **Principles**: anchor high (never lower list price, only discount tactically); never
+  publish enterprise prices; don't undercharge — £100/mo signals "side project" to
+  insurance buyers, £500/mo signals "real software".
+
+### Marketing channels (priority order, agreed not yet executed)
+1. Make the French test successful → turn it into a case study (single biggest lever).
+2. Direct LinkedIn outreach to UK brokers + MGAs. Target 10 sends/day, expect 1–2
+   replies. Reference recent fraud news, link to Cal booker.
+3. BIBA conference (May annually, ~9k UK brokers). Buy delegate ticket (~£500),
+   skip the £10k+ booth.
+4. Guest articles for Insurance Times, Post Magazine, Insurance Insider,
+   Reinsurance News.
+5. Get listed on InsurTech UK directory + F6S + Crunchbase.
+
+**Don't spend money on**: paid ads, PR firm, growth marketing hire, conference booths,
+explainer videos.
+
+### Marketing surface gaps still open
+- **Case study / customer logos** — empty until the French pilot completes (~6 months).
+- **Public pricing page** — keep "contact us for a quote" until 5+ customers; gives
+  freedom to read each prospect.
+- **Security / compliance page** — insurance buyers immediately ask about GDPR/SOC 2.
+  Tied to the Tier 1 hardening plan in Open threads.
+- **Email capture / lead magnet** — even a "Download: 5 fraud patterns AI catches"
+  PDF would build a list to nurture.
+- **Demo script** — defer until the first actual booking lands; tailor to that
+  specific prospect.
+
 ## Open threads (pick up here next session)
+
+### Cloudflare DNS migration (NOW URGENT after today's outage)
+
+The 29 Apr Namecheap suspension showed the failure mode: registrar = DNS host = single
+point of failure. When Namecheap locked the account, DNS service went with it and the
+custom domain went dead, even though the Railway app was healthy throughout.
+
+**Plan:** keep registration at Namecheap (don't fight that battle), but move DNS hosting
+to Cloudflare. Cloudflare is free, supports apex ALIAS records (so `claimlens.co.uk`
+works without a www), faster propagation, DDoS protection, and means a future Namecheap
+account issue can't take the site down on its own.
+
+**Steps when Billy is ready (~10 min):**
+1. Sign up at cloudflare.com (free), add `claimlens.co.uk` as a zone.
+2. Cloudflare scans existing DNS records — verify the CNAME for `www` → Railway target
+   is captured. Add an A or CNAME for the apex pointing at Railway too if you want
+   `claimlens.co.uk` (no www) to also work.
+3. Cloudflare gives two nameservers (e.g. `xxx.ns.cloudflare.com`, `yyy.ns.cloudflare.com`).
+4. Log into Namecheap → Domain List → Manage `claimlens.co.uk` → Nameservers → switch
+   from "Namecheap BasicDNS" to "Custom DNS" → paste Cloudflare's two nameservers → save.
+5. Propagation: 5–60 minutes. Test with `dig +short www.claimlens.co.uk`.
+
+After migration, all DNS edits happen in Cloudflare's panel. Namecheap is just the
+registrar now — they hold the contract for the domain name itself, nothing else.
+
+### Pre-existing items (still relevant)
 
 ### French insurance client — production hardening plan
 
