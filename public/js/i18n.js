@@ -13,7 +13,7 @@ window.i18n = (() => {
     en: {
       // ─── Landing / marketing ────────────────────────────────────────────
       'meta.title':          'ClaimLens AI — Stop Insurance Fraud Before It Costs You',
-      'meta.description':    'AI-powered claims analysis that detects fraudulent insurance claims in seconds, not days. Built for UK insurance brokers.',
+      'meta.description':    'AI-powered claims analysis that detects fraudulent insurance claims in seconds, not days. Built for UK and European insurance brokers.',
 
       'nav.howItWorks':      'How It Works',
       'nav.features':        'Features',
@@ -22,7 +22,7 @@ window.i18n = (() => {
       'hero.badge':          'Powered by Claude AI',
       'hero.title.line1':    'Stop Insurance Fraud',
       'hero.title.line2':    'Before It Costs You',
-      'hero.subtitle':       'AI-powered claims analysis that detects fraudulent claims in seconds, not days. Built for UK insurance brokers.',
+      'hero.subtitle':       'AI-powered claims analysis that detects fraudulent claims in seconds, not days. Built for UK and European insurance brokers.',
       'hero.cta.demo':       'Request a Demo',
       'hero.cta.how':        'See How It Works',
 
@@ -466,7 +466,7 @@ window.i18n = (() => {
     fr: {
       // ─── Page d'accueil / marketing ─────────────────────────────────────
       'meta.title':          'ClaimLens AI — Détectez la fraude à l\'assurance avant qu\'elle ne vous coûte cher',
-      'meta.description':    'Analyse de sinistres alimentée par IA qui détecte les fraudes à l\'assurance en quelques secondes, pas en plusieurs jours. Conçu pour les courtiers en assurance.',
+      'meta.description':    'Analyse de sinistres alimentée par IA qui détecte les fraudes à l\'assurance en quelques secondes, pas en plusieurs jours. Conçu pour les courtiers en assurance au Royaume-Uni et en Europe.',
 
       'nav.howItWorks':      'Fonctionnement',
       'nav.features':        'Fonctionnalités',
@@ -475,7 +475,7 @@ window.i18n = (() => {
       'hero.badge':          'Propulsé par Claude AI',
       'hero.title.line1':    'Stoppez la fraude à l\'assurance',
       'hero.title.line2':    'avant qu\'elle ne vous coûte cher',
-      'hero.subtitle':       'Analyse de sinistres alimentée par IA qui détecte les sinistres frauduleux en quelques secondes, pas en plusieurs jours. Conçu pour les courtiers en assurance.',
+      'hero.subtitle':       'Analyse de sinistres alimentée par IA qui détecte les sinistres frauduleux en quelques secondes, pas en plusieurs jours. Conçu pour les courtiers en assurance au Royaume-Uni et en Europe.',
       'hero.cta.demo':       'Demander une démo',
       'hero.cta.how':        'Voir comment ça marche',
 
