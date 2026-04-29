@@ -19,7 +19,7 @@ window.i18n = (() => {
       'nav.features':        'Features',
       'nav.login':           'Login',
 
-      'hero.badge':          'Powered by Claude AI',
+      'hero.badge':          'AI-Powered Fraud Detection',
       'hero.title.line1':    'Stop Insurance Fraud',
       'hero.title.line2':    'Before It Costs You',
       'hero.subtitle':       'AI-powered claims analysis that detects fraudulent claims in seconds, not days. Built for UK and European insurance brokers.',
@@ -32,7 +32,7 @@ window.i18n = (() => {
       'how.step1.title':     'Submit a Claim',
       'how.step1.body':      'Upload claim documents and enter the details. Supports auto, property, and all major claim types with attached evidence.',
       'how.step2.title':     'AI Analysis',
-      'how.step2.body':      'Claude AI analyses the claim for fraud indicators instantly — checking timelines, amounts, descriptions, documents, and historical patterns.',
+      'how.step2.body':      'Our AI engine analyses the claim for fraud indicators instantly — checking timelines, amounts, descriptions, documents, and historical patterns.',
       'how.step3.title':     'Human Review',
       'how.step3.body':      'High and medium risk claims are automatically escalated to your team with a detailed risk assessment and recommended actions.',
 
@@ -203,7 +203,7 @@ window.i18n = (() => {
       'history.col.submitted':'Submitted',
 
       // ─── Submit view ────────────────────────────────────────────────────
-      'submit.demoNotice':   'Claude AI analysis is enabled when ANTHROPIC_API_KEY is set in .env. Without it, heuristic analysis is used.',
+      'submit.demoNotice':   'AI analysis is active.',
       'submit.card.title':   'New Claim Submission',
       'submit.required':     'All fields marked * are required',
       'submit.section.type':       'Claim Type',
@@ -322,9 +322,9 @@ window.i18n = (() => {
 
       // ─── Settings view ──────────────────────────────────────────────────
       'settings.status.title':      'System Status',
-      'settings.status.connected':  'Claude AI Connected',
-      'settings.status.demo':       'Demo Mode — Claude AI Not Connected',
-      'settings.status.connectedDesc': 'ANTHROPIC_API_KEY is configured. Full AI analysis with Claude Opus is active.',
+      'settings.status.connected':  'AI Engine Connected',
+      'settings.status.demo':       'Demo Mode — AI Engine Not Connected',
+      'settings.status.connectedDesc': 'AI fraud-analysis engine is configured and active.',
       'settings.status.demoDesc':   'Add ANTHROPIC_API_KEY to your .env file to enable full AI-powered fraud analysis.',
       'settings.thresholds.title':  'Fraud Detection Thresholds',
       'settings.thresholds.desc':   'Adjust the score boundaries that determine claim risk classification. Claims scoring above the High Threshold are automatically escalated with priority.',
@@ -350,7 +350,7 @@ window.i18n = (() => {
       'settings.about.version':     'Version',
       'settings.about.versionVal':  '2.0.0 — Modular Architecture',
       'settings.about.model':       'AI Model',
-      'settings.about.modelVal':    'Claude Opus 4.6 (Anthropic)',
+      'settings.about.modelVal':    'ClaimLens AI Engine',
       'settings.about.storage':     'Storage',
       'settings.about.storageVal':  'Local JSON (data/claims.json)',
       'settings.about.modules':     'Modules',
@@ -472,7 +472,7 @@ window.i18n = (() => {
       'nav.features':        'Fonctionnalités',
       'nav.login':           'Connexion',
 
-      'hero.badge':          'Propulsé par Claude AI',
+      'hero.badge':          'Détection de fraude par IA',
       'hero.title.line1':    'Stoppez la fraude à l\'assurance',
       'hero.title.line2':    'avant qu\'elle ne vous coûte cher',
       'hero.subtitle':       'Analyse de sinistres alimentée par IA qui détecte les sinistres frauduleux en quelques secondes, pas en plusieurs jours. Conçu pour les courtiers en assurance au Royaume-Uni et en Europe.',
@@ -485,7 +485,7 @@ window.i18n = (() => {
       'how.step1.title':     'Soumettez un sinistre',
       'how.step1.body':      'Téléchargez les documents et saisissez les détails du sinistre. Prend en charge les sinistres auto, habitation et tous les types majeurs avec pièces justificatives.',
       'how.step2.title':     'Analyse par IA',
-      'how.step2.body':      'Claude AI analyse instantanément le sinistre pour détecter les indicateurs de fraude — vérification des délais, montants, descriptions, documents et antécédents.',
+      'how.step2.body':      'Notre moteur d\'IA analyse instantanément le sinistre pour détecter les indicateurs de fraude — vérification des délais, montants, descriptions, documents et antécédents.',
       'how.step3.title':     'Examen humain',
       'how.step3.body':      'Les sinistres à risque élevé ou moyen sont automatiquement escaladés à votre équipe avec une évaluation détaillée et des actions recommandées.',
 
@@ -656,7 +656,7 @@ window.i18n = (() => {
       'history.col.submitted':'Soumis',
 
       // ─── Soumission ─────────────────────────────────────────────────────
-      'submit.demoNotice':   'L\'analyse par Claude AI est activée lorsque ANTHROPIC_API_KEY est définie dans .env. Sinon, une analyse heuristique est utilisée.',
+      'submit.demoNotice':   'Analyse IA active.',
       'submit.card.title':   'Nouvelle soumission de sinistre',
       'submit.required':     'Tous les champs marqués d\'un * sont requis',
       'submit.section.type':       'Type de sinistre',
@@ -775,9 +775,9 @@ window.i18n = (() => {
 
       // ─── Paramètres ─────────────────────────────────────────────────────
       'settings.status.title':      'État du système',
-      'settings.status.connected':  'Claude AI connecté',
-      'settings.status.demo':       'Mode démo — Claude AI non connecté',
-      'settings.status.connectedDesc': 'ANTHROPIC_API_KEY est configurée. L\'analyse complète par Claude Opus est active.',
+      'settings.status.connected':  'Moteur IA connecté',
+      'settings.status.demo':       'Mode démo — Moteur IA non connecté',
+      'settings.status.connectedDesc': 'Le moteur d\'analyse de fraude IA est configuré et actif.',
       'settings.status.demoDesc':   'Ajoutez ANTHROPIC_API_KEY à votre fichier .env pour activer l\'analyse de fraude complète par IA.',
       'settings.thresholds.title':  'Seuils de détection de fraude',
       'settings.thresholds.desc':   'Ajustez les bornes de score qui déterminent la classification de risque. Les sinistres au-dessus du seuil élevé sont automatiquement escaladés en priorité.',
@@ -803,7 +803,7 @@ window.i18n = (() => {
       'settings.about.version':     'Version',
       'settings.about.versionVal':  '2.0.0 — Architecture modulaire',
       'settings.about.model':       'Modèle IA',
-      'settings.about.modelVal':    'Claude Opus 4.6 (Anthropic)',
+      'settings.about.modelVal':    'ClaimLens AI Engine',
       'settings.about.storage':     'Stockage',
       'settings.about.storageVal':  'JSON local (data/claims.json)',
       'settings.about.modules':     'Modules',

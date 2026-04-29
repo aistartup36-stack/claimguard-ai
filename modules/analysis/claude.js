@@ -151,18 +151,18 @@ confidence per indicator: 0 = uncertain, 100 = highly confident this is a genuin
     });
   } catch (apiErr) {
     const msg = apiErr?.error?.message || apiErr?.message || 'Unknown API error';
-    throw new Error(`Claude API error: ${msg}`);
+    throw new Error(`AI service error: ${msg}`);
   }
 
   // If Claude ran out of room, the JSON will be malformed (truncated mid-array).
   // Surface a clear error rather than a confusing JSON syntax error downstream.
   if (resp.stop_reason === 'max_tokens') {
     console.warn('[claude] response truncated by max_tokens cap');
-    throw new Error('Claude response was truncated (hit max_tokens). Increase the cap.');
+    throw new Error('AI response was truncated (hit max_tokens). Increase the cap.');
   }
 
   const raw = (resp.content?.[0]?.text || '').trim();
-  if (!raw) throw new Error('Claude API returned empty response');
+  if (!raw) throw new Error('AI service returned empty response');
 
   // Strip optional markdown code fences — Claude occasionally wraps vision
   // responses in ```json ... ``` despite the prompt asking for raw JSON.
