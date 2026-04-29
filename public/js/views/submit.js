@@ -241,17 +241,73 @@ window.SubmitView = {
     const input = document.getElementById('postcode-input');
     const resultsEl = document.getElementById('postcode-results');
     const errorEl = document.getElementById('postcode-error');
-    const postcode = input.value.trim();
+    const raw = input.value.trim();
 
     errorEl.style.display = 'none';
     resultsEl.style.display = 'none';
 
-    if (!postcode) { errorEl.textContent = T('submit.pc.enter'); errorEl.style.display = 'block'; return; }
+    if (!raw) { errorEl.textContent = T('submit.pc.enter'); errorEl.style.display = 'block'; return; }
 
     const btn = document.getElementById('postcode-btn');
     btn.disabled = true;
     btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/></svg> ${T('submit.field.searching')}`;
 
+    // Detect format: 5 digits → French BAN, otherwise → UK postcodes.io
+    const compact = raw.replace(/\s+/g, '');
+    const isFrench = /^\d{5}$/.test(compact);
+
+    try {
+      if (isFrench) {
+        await this._lookupFrenchPostcode(compact, resultsEl, errorEl, T);
+      } else {
+        await this._lookupUkPostcode(raw, resultsEl, errorEl, T);
+      }
+    } finally {
+      btn.disabled = false;
+      btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg> ${T('submit.field.findAddress')}`;
+    }
+  },
+
+  async _lookupFrenchPostcode(postcode, resultsEl, errorEl, T) {
+    try {
+      // Official French BAN API — returns multiple municipalities for a postcode.
+      const res = await fetch(`https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(postcode)}&type=municipality&limit=10`);
+      const data = await res.json();
+      const features = (data && data.features) || [];
+
+      if (features.length === 0) {
+        errorEl.textContent = T('submit.pc.notFound');
+        errorEl.style.display = 'block';
+        return;
+      }
+
+      const addresses = features.map(f => {
+        const p = f.properties || {};
+        const city = p.city || p.name || '';
+        const ctx = p.context || '';   // e.g. "75, Paris, Île-de-France"
+        const pc = p.postcode || postcode;
+        const label = [city, pc, ctx].filter(Boolean).join(', ');
+        return { label, value: label };
+      });
+
+      // Deduplicate
+      const seen = new Set();
+      const unique = addresses.filter(a => { if (seen.has(a.value)) return false; seen.add(a.value); return true; });
+
+      const header = unique.length === 1 ? T('submit.pc.result') : T('submit.pc.results', { n: unique.length });
+      resultsEl.innerHTML = `<div class="postcode-dropdown">
+        <div class="postcode-dropdown-header">${header} <strong>${postcode}</strong></div>
+        ${unique.map(a => `<div class="postcode-option" onclick="SubmitView.selectAddress('${a.value.replace(/'/g, "\\'")}')">${a.label}</div>`).join('')}
+        <div class="postcode-option postcode-option-manual" onclick="SubmitView.dismissPostcode()">${T('submit.pc.manual')}</div>
+      </div>`;
+      resultsEl.style.display = 'block';
+    } catch {
+      errorEl.textContent = T('submit.pc.error');
+      errorEl.style.display = 'block';
+    }
+  },
+
+  async _lookupUkPostcode(postcode, resultsEl, errorEl, T) {
     try {
       const res = await fetch(`https://api.postcodes.io/postcodes/${encodeURIComponent(postcode)}`);
       const data = await res.json();
@@ -294,9 +350,6 @@ window.SubmitView = {
     } catch {
       errorEl.textContent = T('submit.pc.error');
       errorEl.style.display = 'block';
-    } finally {
-      btn.disabled = false;
-      btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg> ${T('submit.field.findAddress')}`;
     }
   },
 
