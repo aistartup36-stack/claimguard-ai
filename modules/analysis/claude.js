@@ -38,14 +38,15 @@ function formatAiImageCheckBlock(aiImageCheck) {
 }
 
 /**
- * @param {Object} claimData     — parsed claim form fields
- * @param {Array}  fileBuffers   — [{ buffer: Buffer, mimetype: string, originalname: string }]
- * @param {Object} settings      — { lowRiskThreshold, highRiskThreshold }
- * @param {String} lang          — 'en' | 'fr' (controls the language of free-text output)
- * @param {Object} aiImageCheck  — Sightengine result { summary, perImage } or null
- * @returns {Object}             — analysis result
+ * @param {Object} claimData       — parsed claim form fields
+ * @param {Array}  fileBuffers     — [{ buffer: Buffer, mimetype: string, originalname: string }]
+ * @param {Object} settings        — { lowRiskThreshold, highRiskThreshold }
+ * @param {String} lang            — 'en' | 'fr' (controls the language of free-text output)
+ * @param {Object} aiImageCheck    — Sightengine result { summary, perImage } or null
+ * @param {Object} policeReportFile — separate police-report PDF (optional)
+ * @returns {Object}               — analysis result
  */
-async function analyze(claimData, fileBuffers = [], settings = {}, lang = 'en', aiImageCheck = null) {
+async function analyze(claimData, fileBuffers = [], settings = {}, lang = 'en', aiImageCheck = null, policeReportFile = null) {
   const { lowRiskThreshold = 30, highRiskThreshold = 65 } = settings;
   const delay = daysBetween(claimData.incidentDate, claimData.reportDate);
   const content = [];
@@ -72,11 +73,24 @@ async function analyze(claimData, fileBuffers = [], settings = {}, lang = 'en', 
     }
   }
 
-  const fileNote = fileBuffers.length > 0
-    ? `${fileBuffers.length} supporting document(s) are attached. Analyse each for authenticity, consistency with the claim, signs of digital alteration, and additional fraud indicators.`
+  // Attach the police report PDF (if any) as a final document block.
+  if (policeReportFile && policeReportFile.buffer && policeReportFile.mimetype === 'application/pdf') {
+    const b64 = policeReportFile.buffer.toString('base64');
+    content.push({ type: 'document', source: { type: 'base64', media_type: 'application/pdf', data: b64 } });
+  }
+
+  const totalDocs = fileBuffers.length + (policeReportFile ? 1 : 0);
+  const fileNote = totalDocs > 0
+    ? `${totalDocs} supporting document(s) are attached. Analyse each for authenticity, consistency with the claim, signs of digital alteration, and additional fraud indicators.`
     : 'No supporting documents were provided with this claim.';
 
   const aiCheckBlock = formatAiImageCheckBlock(aiImageCheck);
+
+  const policeReportBlock = policeReportFile
+    ? `\nPOLICE REPORT DOCUMENT: A police report PDF has been uploaded (filename: ${policeReportFile.originalname}). The claimant has stated the police reference number as "${claimData.policeReport || '(not provided)'}". Verify that the document:\n  (a) references the same incident date (${claimData.incidentDate}) and location (${claimData.incidentLocation}),\n  (b) names the same parties (claimant: ${claimData.claimantName}),\n  (c) describes a narrative consistent with the claim,\n  (d) shows no signs of forgery — font inconsistencies, mismatched headers, suspicious metadata, mismatched force/branding, or generic-template wording.\nIf the document looks fabricated, mismatched, or doesn't match the stated reference number, surface this prominently as a high-severity indicator.\n`
+    : (claimData.policeReport && claimData.policeReport.trim() && !['n/a', 'na', 'none', 'pending'].includes(claimData.policeReport.trim().toLowerCase())
+        ? `\nPOLICE REPORT: A police reference number ("${claimData.policeReport}") was provided but no supporting document was uploaded. Note this as a low-severity indicator — the reference cannot be independently verified without the document.\n`
+        : '');
 
   content.push({ type: 'text', text: `${langBlock}You are ClaimLens AI, an expert insurance fraud analyst with 20+ years of experience. Analyse this ${claimData.claimType === 'auto' ? 'auto/vehicle' : 'property'} insurance claim for fraud.
 
@@ -99,7 +113,7 @@ DAMAGE:
 ${claimData.damageDescription}
 
 DOCUMENTS: ${fileNote}
-${aiCheckBlock}
+${aiCheckBlock}${policeReportBlock}
 Analyse for: delayed/inconsistent timelines, inflated estimates, vague/scripted descriptions, missing documentation, claim history patterns, document anomalies, geographic implausibilities, classic fraud narratives.
 
 Respond with ONLY raw valid JSON (no markdown, no code fences):

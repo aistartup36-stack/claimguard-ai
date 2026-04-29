@@ -6,6 +6,7 @@
   const T = (k, v) => (window.i18n ? window.i18n.t(k, v) : k);
   const token = window.location.pathname.split('/claim/')[1] || '';
   const files = [];
+  let policeReportFile = null;
 
   // Mount language switcher
   document.addEventListener('DOMContentLoaded', () => {
@@ -87,6 +88,57 @@
     files.push(file);
     renderTags();
   }
+
+  // Police report (PDF only) — separate slot
+  window.setPoliceReport = (e) => {
+    const f = e.target.files && e.target.files[0];
+    if (f) handlePoliceReportFile(f);
+  };
+  window.policeDragOver = (e) => { e.preventDefault(); document.getElementById('police-report-zone').classList.add('drag-over'); };
+  window.policeDragLeave = () => document.getElementById('police-report-zone').classList.remove('drag-over');
+  window.policeDrop = (e) => {
+    e.preventDefault();
+    document.getElementById('police-report-zone').classList.remove('drag-over');
+    const f = e.dataTransfer.files && e.dataTransfer.files[0];
+    if (f) handlePoliceReportFile(f);
+  };
+  window.removePoliceReport = () => {
+    policeReportFile = null;
+    renderPoliceReportTag();
+    refreshPoliceReportWarning();
+  };
+  function handlePoliceReportFile(file) {
+    if (file.type !== 'application/pdf') { flashError(T('submit.policeReport.pdfOnly')); return; }
+    policeReportFile = file;
+    renderPoliceReportTag();
+    refreshPoliceReportWarning();
+  }
+  function renderPoliceReportTag() {
+    const el = document.getElementById('police-report-tag');
+    if (!el) return;
+    if (!policeReportFile) { el.innerHTML = ''; return; }
+    el.innerHTML = `<span class="file-tag">📄 ${policeReportFile.name}<button type="button" onclick="removePoliceReport()" title="Remove">✕</button></span>`;
+  }
+  function refreshPoliceReportWarning() {
+    const warn = document.getElementById('police-report-warning');
+    if (!warn) return;
+    const refField = document.querySelector('[name="policeReport"]');
+    const ref = refField ? refField.value.trim().toLowerCase() : '';
+    const hasRef = ref && !['', 'n/a', 'na', 'none', 'pending'].includes(ref);
+    if (hasRef && !policeReportFile) {
+      warn.textContent = T('submit.policeReport.warning');
+      warn.style.display = 'block';
+    } else {
+      warn.style.display = 'none';
+    }
+  }
+  document.addEventListener('DOMContentLoaded', () => {
+    const refField = document.querySelector('[name="policeReport"]');
+    if (refField) {
+      refField.addEventListener('input', refreshPoliceReportWarning);
+      refField.addEventListener('blur',  refreshPoliceReportWarning);
+    }
+  });
   function renderTags() {
     const tags = document.getElementById('file-tags');
     tags.innerHTML = files.map(f => `
@@ -126,6 +178,7 @@
     };
     fd.append('claimData', JSON.stringify(claimData));
     files.forEach(f => fd.append('documents', f));
+    if (policeReportFile) fd.append('policeReport', policeReportFile);
 
     try {
       const res = await fetch(`/api/public/claims/${encodeURIComponent(token)}`, {

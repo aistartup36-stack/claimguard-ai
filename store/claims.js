@@ -421,4 +421,32 @@ function nextId() {
   return `CLM-2026-${String(all.length + 1).padStart(4, '0')}`;
 }
 
-module.exports = { getAll, getById, create, update, filter, getForUser, nextId };
+/**
+ * Normalise a police reference number for cross-claim matching.
+ * Strips whitespace, punctuation and casing so "01/12345/24",
+ * "01-12345-24" and "01 12345 24" all collapse to the same key.
+ * Empty / "N/A" / "None" inputs return null (no match attempt).
+ */
+function normalisePoliceRef(ref) {
+  if (!ref) return null;
+  const cleaned = String(ref).replace(/[\s\W_]+/g, '').toUpperCase();
+  if (cleaned.length < 4) return null;
+  const lower = String(ref).trim().toLowerCase();
+  if (['na', 'n/a', 'none', 'pending', 'tbc', 'tba'].includes(lower)) return null;
+  return cleaned;
+}
+
+/**
+ * Return any existing claims that share the given police reference number,
+ * excluding the claim with id `excludeId` (the one being submitted).
+ * Returns [] if the reference is empty / placeholder.
+ */
+function findByPoliceReference(ref, excludeId = null) {
+  const target = normalisePoliceRef(ref);
+  if (!target) return [];
+  return getAll().filter(c =>
+    c.id !== excludeId && normalisePoliceRef(c.policeReport) === target
+  );
+}
+
+module.exports = { getAll, getById, create, update, filter, getForUser, nextId, findByPoliceReference, normalisePoliceRef };

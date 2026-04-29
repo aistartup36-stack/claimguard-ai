@@ -2,10 +2,12 @@
 
 window.SubmitView = {
   _files: [],
+  _policeReportFile: null,
 
   render() {
     const T = (k, v) => (window.i18n ? window.i18n.t(k, v) : k);
     this._files = [];
+    this._policeReportFile = null;
     document.getElementById('content-area').innerHTML = `
       <div style="max-width:800px">
         <div class="demo-notice">
@@ -91,6 +93,27 @@ window.SubmitView = {
               </div>
               <div class="divider"></div>
 
+              <!-- Police Report PDF (separate, named slot) -->
+              <div style="margin-bottom:24px">
+                <div class="form-section-title">${T('submit.section.policeReport')}</div>
+                <div class="form-section-desc">${T('submit.section.policeReportDesc')}</div>
+                <div class="file-upload-area" id="police-report-zone"
+                  onclick="document.getElementById('police-report-input').click()"
+                  ondragover="SubmitView.policeDragOver(event)"
+                  ondragleave="SubmitView.policeDragLeave()"
+                  ondrop="SubmitView.policeDrop(event)">
+                  <div style="width:36px;height:36px;margin:0 auto 10px;color:#94A3B8">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                  </div>
+                  <h4>${T('submit.policeReport.title')}</h4>
+                  <p>${T('submit.policeReport.body')}</p>
+                </div>
+                <input type="file" id="police-report-input" style="display:none" accept=".pdf" onchange="SubmitView.setPoliceReport(event)">
+                <div id="police-report-tag" class="file-tags-container"></div>
+                <div id="police-report-warning" style="display:none;margin-top:8px;padding:10px 12px;background:#FEF3C7;border:1px solid #FDE68A;border-radius:8px;font-size:12px;color:#92400E"></div>
+              </div>
+              <div class="divider"></div>
+
               <!-- Documents -->
               <div style="margin-bottom:24px">
                 <div class="form-section-title">${T('submit.section.docs')}</div>
@@ -128,6 +151,12 @@ window.SubmitView = {
     document.getElementById('postcode-input').addEventListener('keydown', (e) => {
       if (e.key === 'Enter') { e.preventDefault(); SubmitView.lookupPostcode(); }
     });
+    // Surface a soft warning if a police reference is typed but no PDF is attached
+    const policeRefField = document.querySelector('[name="policeReport"]');
+    if (policeRefField) {
+      policeRefField.addEventListener('input', () => SubmitView._refreshPoliceReportWarning());
+      policeRefField.addEventListener('blur',  () => SubmitView._refreshPoliceReportWarning());
+    }
   },
 
   selectType(type) {
@@ -144,6 +173,52 @@ window.SubmitView = {
     e.preventDefault();
     document.getElementById('upload-zone').classList.remove('drag-over');
     Array.from(e.dataTransfer.files).forEach(f => this._addFile(f));
+  },
+
+  // Police report (PDF only) — separate, single-file slot
+  setPoliceReport(e) {
+    const f = e.target.files && e.target.files[0];
+    if (f) this._setPoliceReportFile(f);
+  },
+  policeDragOver(e) { e.preventDefault(); document.getElementById('police-report-zone').classList.add('drag-over'); },
+  policeDragLeave() { document.getElementById('police-report-zone').classList.remove('drag-over'); },
+  policeDrop(e) {
+    e.preventDefault();
+    document.getElementById('police-report-zone').classList.remove('drag-over');
+    const f = e.dataTransfer.files && e.dataTransfer.files[0];
+    if (f) this._setPoliceReportFile(f);
+  },
+  _setPoliceReportFile(file) {
+    const T = (k, v) => (window.i18n ? window.i18n.t(k, v) : k);
+    if (file.type !== 'application/pdf') { Toast.show(T('submit.policeReport.pdfOnly'), 'error'); return; }
+    this._policeReportFile = file;
+    this._renderPoliceReportTag();
+    this._refreshPoliceReportWarning();
+  },
+  _removePoliceReport() {
+    this._policeReportFile = null;
+    this._renderPoliceReportTag();
+    this._refreshPoliceReportWarning();
+  },
+  _renderPoliceReportTag() {
+    const tag = document.getElementById('police-report-tag');
+    if (!tag) return;
+    if (!this._policeReportFile) { tag.innerHTML = ''; return; }
+    tag.innerHTML = `<span class="file-tag">📄 ${this._policeReportFile.name}<button onclick="SubmitView._removePoliceReport()" title="Remove">✕</button></span>`;
+  },
+  _refreshPoliceReportWarning() {
+    const T = (k, v) => (window.i18n ? window.i18n.t(k, v) : k);
+    const warn = document.getElementById('police-report-warning');
+    if (!warn) return;
+    const refField = document.querySelector('[name="policeReport"]');
+    const ref = refField ? refField.value.trim().toLowerCase() : '';
+    const hasRef = ref && !['', 'n/a', 'na', 'none', 'pending'].includes(ref);
+    if (hasRef && !this._policeReportFile) {
+      warn.textContent = T('submit.policeReport.warning');
+      warn.style.display = 'block';
+    } else {
+      warn.style.display = 'none';
+    }
   },
 
   _addFile(file) {
@@ -262,6 +337,7 @@ window.SubmitView = {
     };
     fd.append('claimData', JSON.stringify(claimData));
     this._files.forEach(f => fd.append('documents', f));
+    if (this._policeReportFile) fd.append('policeReport', this._policeReportFile);
 
     App.showLoading();
     try {

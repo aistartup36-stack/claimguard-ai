@@ -146,6 +146,28 @@ Add a dated bullet every time we ship something so future-me has context.
 - **2026-04-29** — Sightengine env vars (`SIGHTENGINE_USER` + `SIGHTENGINE_SECRET`) finally
   added in Railway, so the AI image detection that shipped on the 23rd is now live. Confirmed
   working — flagged a Higgsfield test image at 98% AI probability.
+- **2026-04-29** — Police report PDF upload + cross-claim duplicate detection. New separate
+  upload slot on both the broker form (`public/js/views/submit.js`) and the public claimant
+  form (`public/claim.html` + `public/js/claim-public.js`) — multer now uses `.fields()`
+  to accept `documents` (5 max, photos+PDFs) and a dedicated `policeReport` (1 PDF). The
+  police-report PDF is passed to Claude with a targeted prompt block asking it to verify
+  date/location/parties/forgery. New `findByPoliceReference()` helper in `store/claims.js`
+  normalises references (strips whitespace/punctuation/case) and looks for matches across
+  every existing claim — if found, a "Cross-Claim Duplicate" indicator is added at 90%
+  confidence, fraud_score is floored at 75, and an audit-trail entry is added. New
+  `renderCrossClaimMatch()` and `renderPoliceReport()` blocks on the result + detail views.
+  Full EN/FR i18n.
+- **2026-04-29** — Pass Sightengine verdict into Claude's prompt + hard fraud-score floor
+  when the image is flagged. Solves the contradiction where Claude was writing "photo
+  appears genuine" positive_factors while Sightengine separately flagged the same image at
+  98% AI-generated. Sightengine now runs BEFORE Claude (sequentially, ~1–3s overhead) so
+  its verdict is available to Claude's prompt; `formatAiImageCheckBlock()` writes the
+  verdict into the prompt with explicit "trust this signal" instructions. After analysis,
+  a hard floor enforces fraud_score ≥ 90 for "likely" and ≥ 60 for "possible" verdicts.
+- **2026-04-29** — Fixed Claude responses being truncated mid-JSON: bumped `max_tokens`
+  2048 → 4096, added `stop_reason === 'max_tokens'` detection (throws clear error instead
+  of letting JSON.parse choke on partial output), and added markdown code-fence stripping
+  so `\`\`\`json … \`\`\`` wrapped responses still parse.
 - **2026-04-29** — Fixed silent Claude failure on phone-camera uploads. Added `sharp` and
   `modules/analysis/image-utils.js` with `compressForClaude()`: any image > 4.5 MB is auto-resized
   to 2000 px wide and re-encoded as JPEG q80 before being sent to Claude. iPhone uploads

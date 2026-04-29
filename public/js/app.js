@@ -71,6 +71,69 @@ function renderAiImageCheck(check) {
     </div>`;
 }
 
+// ── Cross-claim duplicate match (shared between result + detail views) ─────
+function renderCrossClaimMatch(match) {
+  if (!match || !match.claimId) return '';
+  const when = match.submittedAt ? Utils.fmtDate(match.submittedAt) : '—';
+  return `
+    <div class="card" style="margin-bottom:22px">
+      <div class="card-header"><h3>${T('crossMatch.title')}</h3></div>
+      <div class="card-body">
+        <div style="display:flex;align-items:flex-start;gap:12px;padding:14px;border-radius:10px;background:#FEE2E2;border:1px solid #FECACA">
+          <div style="width:10px;height:10px;border-radius:50%;background:#EF4444;margin-top:6px;flex-shrink:0"></div>
+          <div style="flex:1;min-width:0">
+            <div style="font-weight:700;color:#991B1B;font-size:14px">${T('crossMatch.heading')}</div>
+            <div style="font-size:13px;color:#334155;margin-top:8px;line-height:1.6">
+              ${T('crossMatch.body', { ref: match.policeReport || '—', other: match.claimId, name: match.claimantName || '—', when })}
+            </div>
+            <div style="margin-top:10px">
+              <a href="#" onclick="event.preventDefault(); App.navigate('detail', '${match.claimId}')" style="font-size:13px;font-weight:600;color:#1E5FC4;text-decoration:none">${T('crossMatch.view', { id: match.claimId })} →</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>`;
+}
+
+// ── Police report attachment (shared between result + detail views) ────────
+function renderPoliceReport(claim) {
+  if (!claim) return '';
+  const file = claim.policeReportFile;
+  const ref = (claim.policeReport || '').trim();
+  const hasRef = ref && !['n/a', 'na', 'none', 'pending'].includes(ref.toLowerCase());
+  if (!file && !hasRef) return ''; // nothing to show
+
+  if (file) {
+    return `
+      <div class="card" style="margin-bottom:22px">
+        <div class="card-header"><h3>${T('policeDoc.title')}</h3></div>
+        <div class="card-body">
+          <div style="display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:10px;background:#D1FAE5;border:1px solid #A7F3D0">
+            <div style="font-size:22px">📄</div>
+            <div style="flex:1;min-width:0">
+              <div style="font-weight:700;color:#065F46;font-size:14px">${T('policeDoc.attached')}</div>
+              <div style="font-size:13px;color:#065F46;opacity:.85;margin-top:2px">${file.name}${ref ? ' · ' + T('policeDoc.ref', { ref }) : ''}</div>
+            </div>
+          </div>
+        </div>
+      </div>`;
+  }
+  // Reference but no document
+  return `
+    <div class="card" style="margin-bottom:22px">
+      <div class="card-header"><h3>${T('policeDoc.title')}</h3></div>
+      <div class="card-body">
+        <div style="display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:10px;background:#FEF3C7;border:1px solid #FDE68A">
+          <div style="width:10px;height:10px;border-radius:50%;background:#F59E0B;flex-shrink:0"></div>
+          <div style="flex:1;min-width:0">
+            <div style="font-weight:700;color:#92400E;font-size:14px">${T('policeDoc.refOnly')}</div>
+            <div style="font-size:13px;color:#92400E;opacity:.85;margin-top:2px">${T('policeDoc.refOnlyBody', { ref })}</div>
+          </div>
+        </div>
+      </div>
+    </div>`;
+}
+
 // ── Badges (shared component) ──────────────────────────────────────────────
 
 window.Badges = {
@@ -250,6 +313,8 @@ window.App = {
         </div>` : ''}
 
         ${renderAiImageCheck(claim.aiImageCheck)}
+        ${renderCrossClaimMatch(claim.crossClaimMatch)}
+        ${renderPoliceReport(claim)}
 
         <div class="card" style="margin-bottom:22px">
           <div class="card-header"><h3>${T('result.recommendation')}</h3></div>
@@ -361,6 +426,8 @@ window.App = {
         </div>` : ''}
 
         ${renderAiImageCheck(claim.aiImageCheck)}
+        ${renderCrossClaimMatch(claim.crossClaimMatch)}
+        ${renderPoliceReport(claim)}
 
         <!-- Audit Trail -->
         ${(claim.auditTrail?.length || 0) > 0 ? `

@@ -240,6 +240,12 @@ window.i18n = (() => {
       'submit.field.priorPh':      'e.g. 2 (2023 theft, 2024 collision) or None',
       'submit.section.docs':       'Supporting Documents',
       'submit.section.docsDesc':   'Attach photos, receipts, or PDF reports. AI will analyse documents for additional fraud indicators. Up to 5 files, 20MB each.',
+      'submit.section.policeReport':     'Police Report (PDF)',
+      'submit.section.policeReportDesc': 'Upload the police report PDF or email confirmation if you have one. AI will check it matches the claim.',
+      'submit.policeReport.title':       'Drop the police report PDF here or click to browse',
+      'submit.policeReport.body':        'PDF only · 20MB max · optional but strongly recommended',
+      'submit.policeReport.warning':     'You provided a police reference but no document — uploading the PDF strengthens the claim and lets AI verify it.',
+      'submit.policeReport.pdfOnly':     'Police report must be a PDF',
       'submit.dropzone.title':     'Drop files here or click to browse',
       'submit.dropzone.body':      'JPEG, PNG, WebP, PDF · Max 5 files · 20MB each',
       'submit.btn.cancel':         'Cancel',
@@ -438,7 +444,23 @@ window.i18n = (() => {
       'aiDetect.perImage':   'Per-image breakdown',
       'aiDetect.explainer.likely':   'One or more uploaded images show strong signs of being AI-generated. Investigate before approving.',
       'aiDetect.explainer.possible': 'Some images may be AI-generated. Worth a closer look during review.',
-      'aiDetect.explainer.unlikely': 'Uploaded images appear to be authentic camera photos.'
+      'aiDetect.explainer.unlikely': 'Uploaded images appear to be authentic camera photos.',
+
+      // ─── Cross-claim duplicate match ────────────────────────────────────
+      'crossMatch.title':   'Cross-Claim Match',
+      'crossMatch.heading': 'Police reference reused on another claim',
+      'crossMatch.body':    'The police reference number "{ref}" was already submitted on claim {other} ({name}, {when}). Reusing a single police reference across separate claims is a near-certain fraud signal.',
+      'crossMatch.view':    'View claim {id}',
+
+      // ─── Police report attachment ───────────────────────────────────────
+      'policeDoc.title':       'Police Report',
+      'policeDoc.attached':    'Police report document attached',
+      'policeDoc.ref':         'Reference: {ref}',
+      'policeDoc.refOnly':     'Reference provided, no document attached',
+      'policeDoc.refOnlyBody': 'A police reference number ("{ref}") was given but no supporting document was uploaded. Reference cannot be independently verified.',
+
+      // ─── Audit trail (cross-claim) ──────────────────────────────────────
+      'audit.note.flaggedCrossClaim': 'Police reference {ref} matches existing claim {otherId}'
     },
 
     fr: {
@@ -671,6 +693,12 @@ window.i18n = (() => {
       'submit.field.priorPh':      'ex. 2 (vol 2023, collision 2024) ou Aucun',
       'submit.section.docs':       'Documents justificatifs',
       'submit.section.docsDesc':   'Joignez photos, reçus ou rapports PDF. L\'IA analysera les documents pour des indicateurs de fraude supplémentaires. Jusqu\'à 5 fichiers, 20 Mo chacun.',
+      'submit.section.policeReport':     'Rapport de police (PDF)',
+      'submit.section.policeReportDesc': 'Téléchargez le rapport de police au format PDF ou la confirmation par email si vous en avez un. L\'IA vérifiera qu\'il correspond au sinistre.',
+      'submit.policeReport.title':       'Déposez le PDF du rapport de police ici ou cliquez pour parcourir',
+      'submit.policeReport.body':        'PDF uniquement · 20 Mo max · facultatif mais fortement recommandé',
+      'submit.policeReport.warning':     'Vous avez fourni une référence de police mais aucun document — télécharger le PDF renforce le sinistre et permet à l\'IA de le vérifier.',
+      'submit.policeReport.pdfOnly':     'Le rapport de police doit être un PDF',
       'submit.dropzone.title':     'Déposez les fichiers ici ou cliquez pour parcourir',
       'submit.dropzone.body':      'JPEG, PNG, WebP, PDF · 5 fichiers max · 20 Mo chacun',
       'submit.btn.cancel':         'Annuler',
@@ -869,7 +897,23 @@ window.i18n = (() => {
       'aiDetect.perImage':   'Détail par image',
       'aiDetect.explainer.likely':   'Une ou plusieurs images téléchargées présentent de fortes indications d\'être générées par IA. Enquêtez avant d\'approuver.',
       'aiDetect.explainer.possible': 'Certaines images pourraient être générées par IA. À examiner de plus près lors de la revue.',
-      'aiDetect.explainer.unlikely': 'Les images téléchargées semblent être de véritables photos de caméra.'
+      'aiDetect.explainer.unlikely': 'Les images téléchargées semblent être de véritables photos de caméra.',
+
+      // ─── Cross-claim duplicate match ────────────────────────────────────
+      'crossMatch.title':   'Correspondance entre sinistres',
+      'crossMatch.heading': 'Référence de police réutilisée sur un autre sinistre',
+      'crossMatch.body':    'Le numéro de référence de police « {ref} » a déjà été soumis sur le sinistre {other} ({name}, {when}). Réutiliser une même référence de police sur des sinistres distincts est un signal de fraude quasi certain.',
+      'crossMatch.view':    'Voir le sinistre {id}',
+
+      // ─── Police report attachment ───────────────────────────────────────
+      'policeDoc.title':       'Rapport de police',
+      'policeDoc.attached':    'Rapport de police joint',
+      'policeDoc.ref':         'Référence : {ref}',
+      'policeDoc.refOnly':     'Référence fournie, aucun document joint',
+      'policeDoc.refOnlyBody': 'Un numéro de référence de police (« {ref} ») a été indiqué mais aucun document justificatif n\'a été téléchargé. La référence ne peut pas être vérifiée de manière indépendante.',
+
+      // ─── Audit trail (cross-claim) ──────────────────────────────────────
+      'audit.note.flaggedCrossClaim': 'La référence de police {ref} correspond au sinistre existant {otherId}'
     }
   };
 

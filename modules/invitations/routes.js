@@ -23,12 +23,23 @@ const aiDetection = require('../analysis/ai-detection');
 
 const upload = multer({
   storage: multer.memoryStorage(),
-  limits: { fileSize: 20 * 1024 * 1024, files: 5 },
+  limits: { fileSize: 20 * 1024 * 1024, files: 6 }, // 5 supporting docs + 1 police report
   fileFilter: (req, file, cb) => {
+    if (file.fieldname === 'policeReport') {
+      file.mimetype === 'application/pdf'
+        ? cb(null, true)
+        : cb(new Error(`Police report must be a PDF (got ${file.mimetype})`));
+      return;
+    }
     const allowed = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'application/pdf'];
     allowed.includes(file.mimetype) ? cb(null, true) : cb(new Error(`Unsupported file type: ${file.mimetype}`));
   }
 });
+
+const publicClaimUpload = upload.fields([
+  { name: 'documents', maxCount: 5 },
+  { name: 'policeReport', maxCount: 1 }
+]);
 
 // ── Broker endpoints ───────────────────────────────────────────────────────
 
@@ -69,7 +80,7 @@ router.get('/public/invitations/:token', (req, res) => {
   });
 });
 
-router.post('/public/claims/:token', upload.array('documents', 5), async (req, res) => {
+router.post('/public/claims/:token', publicClaimUpload, async (req, res) => {
   try {
     const { ok, reason, invitation } = invitationsStore.resolveForPublicUse(req.params.token);
     if (!ok) return res.status(404).json({ success: false, error: reason });
@@ -93,13 +104,17 @@ router.post('/public/claims/:token', upload.array('documents', 5), async (req, r
     }
 
     const settings = settingsStore.get();
-    const files = (req.files || []).map(f => ({ name: f.originalname, type: f.mimetype }));
+    const docFiles = (req.files?.documents || []);
+    const policeReportFile = (req.files?.policeReport || [])[0] || null;
+    const allFiles = [...docFiles, ...(policeReportFile ? [policeReportFile] : [])];
+    const files = allFiles.map(f => ({ name: f.originalname, type: f.mimetype }));
 
     const claim = {
       id: claimsStore.nextId(),
       ...claimData,
       claimedAmount: Number(claimData.claimedAmount),
       files,
+      policeReportFile: policeReportFile ? { name: policeReportFile.originalname, type: policeReportFile.mimetype } : null,
       owner: invitation.createdBy,             // claim belongs to the broker who sent the link
       assignedTo: null,
       status: 'analyzing',
@@ -107,6 +122,7 @@ router.post('/public/claims/:token', upload.array('documents', 5), async (req, r
       fraudScore: null,
       analysis: null,
       aiImageCheck: null,
+      crossClaimMatch: null,
       source: 'claimant-link',                  // useful metadata
       invitationToken: invitation.token,
       submittedAt: new Date().toISOString(),
@@ -121,13 +137,29 @@ router.post('/public/claims/:token', upload.array('documents', 5), async (req, r
     // AI image detection runs first so its verdict is fed into Claude's prompt.
     let aiImageCheck = null;
     try {
-      const perImage = await aiDetection.checkAll(req.files || []);
+      const perImage = await aiDetection.checkAll(docFiles);
       const summary = aiDetection.summarise(perImage);
       if (perImage.length > 0 && summary.verdict !== 'skipped') {
         aiImageCheck = { summary, perImage };
       }
     } catch (detectionErr) {
       console.warn('[ai-detection public] unexpected failure:', detectionErr.message);
+    }
+
+    // Cross-claim duplicate police-reference check.
+    let crossClaimMatch = null;
+    if (claimData.policeReport) {
+      const existing = claimsStore.findByPoliceReference(claimData.policeReport, claim.id);
+      if (existing.length > 0) {
+        const m = existing[0];
+        crossClaimMatch = {
+          claimId: m.id,
+          claimantName: m.claimantName,
+          submittedAt: m.submittedAt,
+          owner: m.owner,
+          policeReport: m.policeReport
+        };
+      }
     }
 
     // Language preference: claimData.lang wins, otherwise honour Accept-Language, otherwise English.
@@ -138,8 +170,8 @@ router.post('/public/claims/:token', upload.array('documents', 5), async (req, r
     try {
       const useAI = !!process.env.ANTHROPIC_API_KEY;
       const result = useAI
-        ? await claudeAnalysis.analyze(claimData, req.files || [], settings, lang, aiImageCheck)
-        : heuristicAnalysis.analyze(claimData, req.files || [], settings);
+        ? await claudeAnalysis.analyze(claimData, docFiles, settings, lang, aiImageCheck, policeReportFile)
+        : heuristicAnalysis.analyze(claimData, docFiles, settings);
 
       claim.analysis = result;
       claim.fraudScore = result.fraud_score;
@@ -156,6 +188,23 @@ router.post('/public/claims/:token', upload.array('documents', 5), async (req, r
         claim.riskLevel = 'medium';
         claim.analysis.fraud_score = 60;
         claim.analysis.risk_level = 'medium';
+      }
+
+      // Cross-claim duplicate floor.
+      if (crossClaimMatch) {
+        const indicator = {
+          category: 'Cross-Claim Duplicate',
+          description: `Police reference "${claimData.policeReport}" matches existing claim ${crossClaimMatch.claimId} (${crossClaimMatch.claimantName})`,
+          severity: 'high',
+          confidence: 90
+        };
+        claim.analysis.indicators = [indicator, ...(claim.analysis.indicators || [])];
+        if (claim.fraudScore < 75) {
+          claim.fraudScore = 75;
+          claim.riskLevel = 'high';
+          claim.analysis.fraud_score = 75;
+          claim.analysis.risk_level = 'high';
+        }
       }
 
       const { escalationEnabled } = settings;
@@ -202,6 +251,15 @@ router.post('/public/claims/:token', upload.array('documents', 5), async (req, r
           notes: { key: 'audit.note.flaggedAi', vars: { name: aiImageCheck.summary.worstImage, pct: Math.round((aiImageCheck.summary.maxScore || 0) * 100) } }
         });
       }
+    }
+    if (crossClaimMatch) {
+      claim.crossClaimMatch = crossClaimMatch;
+      claim.auditTrail.push({
+        timestamp: new Date().toISOString(),
+        actor: 'System',
+        action: 'flagged',
+        notes: { key: 'audit.note.flaggedCrossClaim', vars: { ref: claimData.policeReport, otherId: crossClaimMatch.claimId } }
+      });
     }
 
     claimsStore.create(claim);
