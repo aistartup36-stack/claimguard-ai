@@ -10,10 +10,6 @@ window.SubmitView = {
     this._policeReportFile = null;
     document.getElementById('content-area').innerHTML = `
       <div style="max-width:800px">
-        <div class="demo-notice">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-          ${T('submit.demoNotice')}
-        </div>
         <div class="card">
           <div class="card-header"><h3>${T('submit.card.title')}</h3><span style="font-size:12px;color:#64748B">${T('submit.required')}</span></div>
           <div class="card-body">
