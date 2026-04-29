@@ -108,7 +108,7 @@ confidence per indicator: 0 = uncertain, 100 = highly confident this is a genuin
   try {
     resp = await client().messages.create({
       model: 'claude-sonnet-4-6',
-      max_tokens: 2048,
+      max_tokens: 4096,
       messages: [{ role: 'user', content }]
     });
   } catch (apiErr) {
@@ -116,13 +116,30 @@ confidence per indicator: 0 = uncertain, 100 = highly confident this is a genuin
     throw new Error(`Claude API error: ${msg}`);
   }
 
-  const text = (resp.content?.[0]?.text || '').trim();
-  if (!text) throw new Error('Claude API returned empty response');
+  // If Claude ran out of room, the JSON will be malformed (truncated mid-array).
+  // Surface a clear error rather than a confusing JSON syntax error downstream.
+  if (resp.stop_reason === 'max_tokens') {
+    console.warn('[claude] response truncated by max_tokens cap');
+    throw new Error('Claude response was truncated (hit max_tokens). Increase the cap.');
+  }
+
+  const raw = (resp.content?.[0]?.text || '').trim();
+  if (!raw) throw new Error('Claude API returned empty response');
+
+  // Strip optional markdown code fences — Claude occasionally wraps vision
+  // responses in ```json ... ``` despite the prompt asking for raw JSON.
+  const text = raw
+    .replace(/^```(?:json)?\s*/i, '')
+    .replace(/\s*```\s*$/i, '')
+    .trim();
+
   try {
     return JSON.parse(text);
   } catch {
     const m = text.match(/\{[\s\S]*\}/);
-    if (m) return JSON.parse(m[0]);
+    if (m) {
+      try { return JSON.parse(m[0]); } catch {}
+    }
     throw new Error('AI returned an unparseable response');
   }
 }
