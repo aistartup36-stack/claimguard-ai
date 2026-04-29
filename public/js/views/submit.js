@@ -270,34 +270,42 @@ window.SubmitView = {
 
   async _lookupFrenchPostcode(postcode, resultsEl, errorEl, T) {
     try {
-      // Official French BAN API — returns multiple municipalities for a postcode.
-      const res = await fetch(`https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(postcode)}&type=municipality&limit=10`);
+      // Official French BAN API. We don't use type=municipality because
+      // Paris arrondissements (75001–75020) and a few overseas territories
+      // are indexed by name, not by postcode-as-text, and get filtered out.
+      // Instead we fetch broader address-level results and dedupe by city.
+      const res = await fetch(`https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(postcode)}&limit=15`);
       const data = await res.json();
       const features = (data && data.features) || [];
 
-      if (features.length === 0) {
+      // Keep only matches that actually correspond to this postcode (the BAN
+      // sometimes returns near-misses ranked by score) and dedupe per city.
+      const seen = new Set();
+      const addresses = [];
+      for (const f of features) {
+        const p = f.properties || {};
+        const pc = p.postcode || '';
+        if (pc !== postcode) continue;
+        const city = p.city || p.name || '';
+        if (!city) continue;
+        const key = `${city}|${pc}`;
+        if (seen.has(key)) continue;
+        seen.add(key);
+        const ctx = p.context || ''; // e.g. "75, Paris, Île-de-France"
+        const label = [city, pc, ctx].filter(Boolean).join(', ');
+        addresses.push({ label, value: label });
+      }
+
+      if (addresses.length === 0) {
         errorEl.textContent = T('submit.pc.notFound');
         errorEl.style.display = 'block';
         return;
       }
 
-      const addresses = features.map(f => {
-        const p = f.properties || {};
-        const city = p.city || p.name || '';
-        const ctx = p.context || '';   // e.g. "75, Paris, Île-de-France"
-        const pc = p.postcode || postcode;
-        const label = [city, pc, ctx].filter(Boolean).join(', ');
-        return { label, value: label };
-      });
-
-      // Deduplicate
-      const seen = new Set();
-      const unique = addresses.filter(a => { if (seen.has(a.value)) return false; seen.add(a.value); return true; });
-
-      const header = unique.length === 1 ? T('submit.pc.result') : T('submit.pc.results', { n: unique.length });
+      const header = addresses.length === 1 ? T('submit.pc.result') : T('submit.pc.results', { n: addresses.length });
       resultsEl.innerHTML = `<div class="postcode-dropdown">
         <div class="postcode-dropdown-header">${header} <strong>${postcode}</strong></div>
-        ${unique.map(a => `<div class="postcode-option" onclick="SubmitView.selectAddress('${a.value.replace(/'/g, "\\'")}')">${a.label}</div>`).join('')}
+        ${addresses.map(a => `<div class="postcode-option" onclick="SubmitView.selectAddress('${a.value.replace(/'/g, "\\'")}')">${a.label}</div>`).join('')}
         <div class="postcode-option postcode-option-manual" onclick="SubmitView.dismissPostcode()">${T('submit.pc.manual')}</div>
       </div>`;
       resultsEl.style.display = 'block';
