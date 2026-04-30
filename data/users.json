@@ -34,5 +34,11 @@
     "passwordHash": "ec990aa9b2c6ec47cf8b114ce2c94e34b8efbcde2ed36ca8d2c6852f30389e07",
     "role": "user",
     "displayName": "FR User"
+  },
+  {
+    "username": "fruser2",
+    "passwordHash": "090be027316ae0dd0ca6e828cbfd4976f74c5be8108950bde7d33fed7ef5c9ff",
+    "role": "user",
+    "displayName": "FR User 2"
   }
 ]
